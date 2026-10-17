@@ -15,3 +15,18 @@
 .contact-marker.offscreen{padding-top:0;opacity:.65;font-size:8px}.contact-marker.offscreen:before{display:none}
 body[data-context=lost]:after{content:'GRAPHICS CONTEXT LOST · WAITING TO RESTORE';position:fixed;top:0;left:0;right:0;background:#901d28;color:white;text-align:center;z-index:2000;padding:16px}
 #flight-controls.inactive{display:block;visibility:hidden;pointer-events:none}.flight-button.missile{min-height:48px;min-width:48px}#refit{max-width:490px;margin:16px 0 20px}#refit h2{font:9px monospace;letter-spacing:.12em;color:#9eb7c9;margin:0 0 9px}#refit h2 span{float:right;color:#fff}.refit-upgrades{display:flex;gap:8px}.refit-upgrades button{flex:1;text-align:left;font-size:8px;padding:10px;min-width:0}.refit-upgrades button span{display:block;margin-top:5px;font-size:8px;color:#fb746a}.refit-upgrades button:disabled{opacity:.45;cursor:default}body[data-phase=won] .menu-shell,body[data-phase=lost] .menu-shell{padding-bottom:100px}
+/* Minimal flight HUD: world and ship take priority. */
+#hud .brand,#hud .meter>span,#hud .meter em,#hud .boost-meter,#hud #radar-panel>small,#hud #lock-label,#hud #altitude-value,#hud .combat-data{display:none}
+#hud .telemetry{left:0;right:auto;top:10px;width:105px;background:none;padding:0}
+#hud .meter{height:12px;gap:0}#hud .meter>i{height:3px}
+#hud #base-status{display:flex;align-items:center;gap:6px;border:0;margin:2px 0 0;padding:0;font-size:15px;line-height:15px;color:#a2cfd8}
+#base-status>i{flex:1;height:3px;background:#dae8f62b}#base-status b{display:block;height:100%;background:#a2cfd8}
+#hud #radar-panel{top:58px;left:auto;right:0;width:76px;height:76px;opacity:.75}#hud #radar{width:76px;height:76px}
+#hud #objective{left:30%;right:30%;top:13px;font:600 8px/1 system-ui;letter-spacing:.18em;color:#c7d3dc}
+#hud #pause-button{font-size:17px;min-width:48px;min-height:48px;padding:8px;background:#10192360;border-color:#a9c8de30}#pause-button span{display:none}
+#hud .flight-data{left:50%;transform:translateX(-50%);bottom:10px;opacity:.7}#hud .flight-data>span{font-size:22px;letter-spacing:0}#hud .flight-data>small{font-size:7px}
+#hud #damage-warning{top:62px;font:600 10px/1 system-ui;letter-spacing:.17em}
+#hud #target-reticle{width:20px;height:20px;opacity:.65}#hud #target-reticle:before{width:30px;left:-6px;top:9px}#hud #target-reticle:after{height:30px;top:-6px;left:9px}#hud #target-reticle i{inset:7px}
+.flight-button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.flight-button.fire span{display:none}.flight-button.missile span{position:absolute;right:7px;bottom:5px;font-size:10px}.flight-button.missile{background:conic-gradient(#bd493866 var(--lock-progress,0%),#14243580 0%)}.flight-button.missile.locked{border-color:#fff;box-shadow:0 0 12px #ffe0c144}
+.contact-marker{width:14px;height:14px;padding:0!important;font-size:15px;color:#a2cfd8}.contact-marker:before{width:9px;height:9px;top:0;border-color:#ff7966aa}.contact-marker.selected:before{width:18px;height:18px}.contact-marker.installation:before{display:none}.contact-marker.offscreen:before{display:block;transform:translateX(-50%) rotate(45deg);width:5px;height:5px}.contact-marker.installation.offscreen:before{display:none}
+#hud #pause-button{position:absolute;right:0;top:7px}

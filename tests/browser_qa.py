@@ -6,7 +6,7 @@ ff=Path('/tmp/moonfall-browsers/ffmpeg-1011/ffmpeg-linux');ff.parent.mkdir(paren
 if not ff.exists(): ff.symlink_to('/usr/bin/ffmpeg')
 from playwright.sync_api import sync_playwright
 from PIL import Image, ImageStat
-ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'artifacts'/('qa-production' if '--production' in sys.argv else 'qa-context' if '--context-only' in sys.argv else 'qa-final' if '--quick' in sys.argv else 'qa-2026-10-17');OUT.mkdir(parents=True,exist_ok=True)
+ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'artifacts'/('qa-controls-review' if '--controls-review' in sys.argv else 'qa-production' if '--production' in sys.argv else 'qa-context' if '--context-only' in sys.argv else 'qa-final' if '--quick' in sys.argv else 'qa-2026-10-17');OUT.mkdir(parents=True,exist_ok=True)
 class Quiet(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=http.server.ThreadingHTTPServer(('127.0.0.1',5188),functools.partial(Quiet,directory=str(ROOT/'dist')))
@@ -32,8 +32,32 @@ try:
   context=browser.new_context(viewport={'width':844,'height':390},is_mobile=True,has_touch=True,device_scale_factor=1,record_video_dir=str(OUT/'video'),record_video_size={'width':844,'height':390})
   page=context.new_page();page.on('pageerror',lambda e:report['errors'].append(str(e)));page.on('console',lambda m:report['errors'].append(m.text) if m.type=='error' else None);page.on('response',lambda r:report['resources'].append({'url':r.url,'status':r.status}) if r.status>=400 else None)
   page.goto(('https://based-in-space-preview.vercel.app/' if '--production' in sys.argv else 'http://127.0.0.1:5188/')+'?qa=1',wait_until='networkidle');page.wait_for_function('!!window.moonfall');page.locator('#deploy').click();page.wait_for_timeout(1200)
+  if '--controls-review' in sys.argv:
+   cdp=context.new_cdp_session(page)
+   def send_touch(kind,points):cdp.send('Input.dispatchTouchEvent',{'type':kind,'touchPoints':[{'id':i,'x':x,'y':y,'radiusX':5,'radiusY':5,'force':1} for i,x,y in points]})
+   assert page.locator('[data-action=up],[data-action=down]').count()==0
+   box=page.locator('#flight-stick').bounding_box();sx=box['x']+box['width']/2;sy=box['y']+box['height']/2
+   measurements=[]
+   for dx,dy in [(30,0),(-30,0),(0,-30),(0,30)]:
+    page.evaluate('moonfall.controls.release();moonfall.game.player.velocity={x:0,y:0,z:0}')
+    before=page.evaluate('({...moonfall.game.player.position})');send_touch('touchStart',[(1,sx+dx,sy+dy)]);page.wait_for_timeout(300);state=page.evaluate('({p:moonfall.game.player.position,input:moonfall.input,basis:moonfall.renderer.flightBasis()})');send_touch('touchEnd',[])
+    if dx:assert state['input']['moveX']*state['basis']['right']['x']*dx>0
+    if dy:assert (state['p']['y']-before['y'])*(-dy)>0
+    measurements.append({'stick':[dx,dy],'before':before,'after':state['p'],'mappedInput':state['input']})
+   report['checks']['screenRelativeFlight']=measurements
+   fire=page.locator('[data-action=fire]').bounding_box();fx=fire['x']+fire['width']/2;fy=fire['y']+fire['height']/2
+   send_touch('touchStart',[(1,sx+28,sy-16),(2,fx,fy)]);send_touch('touchMove',[(1,sx+28,sy-16),(2,fx,fy-35)]);page.wait_for_timeout(200);intent=page.evaluate('moonfall.controls.sample()');assert intent['fire'] and intent['boost'] and intent['altitude']>0;report['checks']['twoThumbFlight']=intent;send_touch('touchEnd',[])
+   for w,h in [(844,390),(640,360),(932,430)]:
+    page.set_viewport_size({'width':w,'height':h});page.wait_for_timeout(400);issues=check_layout(bounds(page),w,h);assert not issues,issues
+    page.evaluate('moonfall.controls.release();moonfall.setPausedForScreenshot(true);for(let n=0;n<45;n++)moonfall.renderer.frame(moonfall.game,1/60,1,{})')
+    capture(page,f'{w}x{h}-controls-fixed');text=page.locator('#hud').inner_text();report['checks'][f'hud-{w}']={'visibleText':text,'layoutIssues':issues};assert len(text.split())<12,text
+    assert page.evaluate('moonfall.renderer.metrics().camera')=='close'
+    span=page.evaluate('(()=>{const r=moonfall.renderer,p=moonfall.game.player.position,a=r.project({x:p.x-11,y:p.y,z:p.z}),b=r.project({x:p.x+11,y:p.y,z:p.z});return Math.abs(a.x-b.x)})()');report['checks'][f'heroPixels-{w}']=span;assert span>70,span
+    page.evaluate('moonfall.setPausedForScreenshot(false)')
+   page.locator('#pause-button').click();assert page.evaluate('moonfall.screen')=='paused';page.locator('#deploy').click();report['checks']['pauseResume']=True
+   context.close();browser.close();assert not report['errors'];assert not report['resources'];sys.exit(0)
   if '--production' in sys.argv:
-   page.wait_for_timeout(800);assert page.locator('#hud').is_visible();page.keyboard.down('KeyD');page.keyboard.down('Space');page.wait_for_timeout(1000);page.keyboard.up('KeyD');page.keyboard.up('Space');capture(page,'live-production');gl=page.evaluate('(()=>{const gl=moonfall.renderer.renderer.getContext(),ext=gl.getExtension("WEBGL_debug_renderer_info");return ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER)})()');report['checks']['gpu']=gl;report['checks']['liveGame']=page.evaluate('moonfall.snapshot()');context.close();browser.close();assert not report['errors'];assert not report['resources'];sys.exit(0)
+   page.wait_for_timeout(800);assert page.locator('#hud').is_visible();assert page.locator('#pause-button').bounding_box()['x']>page.viewport_size['width']-85;assert page.locator('[data-action=up],[data-action=down]').count()==0;assert len(page.locator('#hud').inner_text().split())<12;page.keyboard.down('KeyD');page.keyboard.down('Space');page.wait_for_timeout(1000);page.keyboard.up('KeyD');page.keyboard.up('Space');capture(page,'live-production');gl=page.evaluate('(()=>{const gl=moonfall.renderer.renderer.getContext(),ext=gl.getExtension("WEBGL_debug_renderer_info");return ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER)})()');report['checks']['gpu']=gl;report['checks']['liveGame']=page.evaluate('moonfall.snapshot()');context.close();browser.close();assert not report['errors'];assert not report['resources'];sys.exit(0)
   if '--context-only' in sys.argv:
    page.evaluate('window.testContextLoss=moonfall.renderer.renderer.getContext().getExtension("WEBGL_lose_context");window.testContextLoss.loseContext()');page.wait_for_timeout(250);assert page.evaluate('moonfall.screen')=='paused';page.evaluate('window.testContextLoss.restoreContext()');page.wait_for_function('document.body.dataset.context==="ready"');page.locator('#deploy').click();page.wait_for_timeout(400);capture(page,'context-restored');context.set_offline(True);page.keyboard.down('KeyW');page.wait_for_timeout(300);page.keyboard.up('KeyW');assert page.evaluate('moonfall.game.time')>0;context.set_offline(False);report['checks']['contextRestore']=True;report['checks']['offlineAfterLoad']=True;report['checks']['singleRenderer']=page.evaluate('moonfall.renderer.renderer.getContext() instanceof WebGL2RenderingContext');context.close();browser.close();sys.exit(0)
   cdp=context.new_cdp_session(page)

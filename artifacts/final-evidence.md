@@ -53,3 +53,11 @@ Skills used: cloud-environment runtime/networking; owner Three.js game-director 
 Public URL verified in fresh Chromium: new game deploys, movement and firing change live state, audio runs, nonblank canvas, zero console/page/resource errors. [Production screenshot](evidence/live-production.jpg) and [raw smoke report](evidence/production-smoke.json). Vercel build logs show successful static output and deployment, with no build errors. There are no application server functions in this build; client smoke verification is not continuous client-error monitoring. Drains were not inspected.
 
 GPU identification confirms ANGLE/Vulkan SwiftShader software rendering. Fresh-page raw average rAF interval was~350ms including startup; CPU submission~1.5ms,80draw calls and53,538visible triangles. This is a slow cloud software-rendered session and does NOT satisfy or establish the30/60FPS target. Physical-GPU Android/thermal performance remains a release gate; no mobile-ready or premium claim.
+
+## Owner correction: controls and uncluttered close view
+
+The owner rejected reversed movement, separate altitude buttons, excessive flight text and camera distance. Corrected at the input/camera boundary: screen-right uses the camera's right vector, not world+X. Vertical stick movement climbs/descends with forward/reverse motion; no altitude touch buttons. Mouse aiming still raycasts in world space; gamepad aiming also maps through the camera basis.
+
+The default camera is now42units above/62behind at50°FOV, with optional tactical/chase views. Observed hero horizontal span114–136CSSpx across640×360,844×390 and932×430. Branding, per-installation readouts, role/distance labels and weapon instruction strings are removed from active flight. Compact integrity bars, radar, simple contact markers and icon actions remain. Pause is explicitly anchored upper-right.
+
+`npm test`:23PASS including real Three.js projection tests at four camera headings. Focused Chrome touch tests verify both horizontal directions, altitude increasing/decreasing from the stick, no ALT buttons, two-thumb steering/climbing/firing/boost, pause/resume, no control overlap and fewer than12visible HUD words. Console/page/resource errors zero. [Correction report](controls-review.json). Physical device/performance limitations above still apply.

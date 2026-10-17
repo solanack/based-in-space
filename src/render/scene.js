@@ -64,7 +64,7 @@ function baseFactory(module,index,kit){
 function disposeTree(root,disposeMaterials=true){const geos=new Set(),mats=new Set();root.traverse(o=>{if(o.geometry)geos.add(o.geometry);if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material])mats.add(m);});for(const g of geos)g.dispose();if(disposeMaterials)for(const m of mats)m.dispose();}
 export class MoonRenderer{
   constructor(canvas,game,settings={}){
-    this.canvas=canvas;this.settings=settings;this.mode='tactical';this.frames=[];this.tiles=new Map();this.enemyModels=new Map();this.baseModels=new Map();this.frameMs=16.7;this.dpr=1;this.quality='auto';this.origin=V();this.lastEvent=0;this.lastAdapt=0;
+    this.canvas=canvas;this.settings=settings;this.mode='close';this.frames=[];this.tiles=new Map();this.enemyModels=new Map();this.baseModels=new Map();this.frameMs=16.7;this.dpr=1;this.quality='auto';this.origin=V();this.lastEvent=0;this.lastAdapt=0;
     this.renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
     this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.1;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;
     this.scene=new T.Scene();this.scene.background=new T.Color(0x04060a);
@@ -98,7 +98,8 @@ export class MoonRenderer{
   addEarth(){const c=document.createElement('canvas');c.width=256;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='#143655';ctx.fillRect(0,0,256,128);for(let i=0;i<45;i++){ctx.fillStyle=i%4?'#427477':'#c8cfc7';ctx.beginPath();const x=(Math.sin(i*13.2)*.5+.5)*256,y=(Math.cos(i*3.8)*.5+.5)*128;ctx.ellipse(x,y,8+i%13,3+i%9,i,0,7);ctx.fill();}const texture=new T.CanvasTexture(c);texture.colorSpace=T.SRGBColorSpace;this.earth=new T.Mesh(new T.SphereGeometry(135,40,24),new T.MeshStandardMaterial({map:texture,roughness:.9,emissive:0x0c1827,emissiveIntensity:.4}));this.earth.position.set(-1100,120,3100);this.earth.rotation.z=.3;this.scene.add(this.earth);}
   addRoads(base){const root=new T.Group();for(const b of base){const len=Math.hypot(b.position.x,b.position.z);if(len<10)continue;const road=box(root,this.kit.dark,b.position.x/2,.6,b.position.z/2,7,.2,len);road.rotation.y=Math.atan2(b.position.x,b.position.z);for(let i=0;i<8;i++){const t=i/8;box(root,this.kit.steel,b.position.x*t,1,b.position.z*t,1,.2,2);}}batch(root);this.world.add(root);}
   resize(){const w=this.canvas.clientWidth||innerWidth,h=this.canvas.clientHeight||innerHeight;const quality=this.settings.quality||'auto';this.dpr=quality==='low'?.75:quality==='high'?Math.min(devicePixelRatio,1.5):this.dpr;this.renderer.setPixelRatio(this.dpr);this.renderer.setSize(w,h,false);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();}
-  setCamera(){this.mode=this.mode==='tactical'?'chase':'tactical';return this.mode;}
+  setCamera(){const modes=['close','tactical','chase'];this.mode=modes[(modes.indexOf(this.mode)+1)%modes.length];return this.mode;}
+  flightBasis(){const right=V(1,0,0).applyQuaternion(this.camera.quaternion),forward=V();this.camera.getWorldDirection(forward);return {right,forward};}
   updateTerrain(p){const cx=Math.floor(p.x/512),cz=Math.floor(p.z/512),key=`${cx},${cz}`;if(this.rockCenter===key)return;this.rockCenter=key;
     const wanted=new Set();for(let x=cx-2;x<=cx+2;x++)for(let z=cz-2;z<=cz+2;z++){const k=`${x},${z}`;wanted.add(k);if(this.tiles.has(k))continue;const g=new T.PlaneGeometry(512,512,40,40);g.rotateX(-Math.PI/2);const pos=g.attributes.position,col=[];for(let i=0;i<pos.count;i++){const wx=pos.getX(i)+x*512,wz=pos.getZ(i)+z*512,y=terrainHeight(wx,wz);pos.setY(i,y);const a=.58+.18*Math.sin(wx*.04)*Math.cos(wz*.035)+.2*clamp(y/70,0,1);col.push(a,a*.98,a*1.01);}g.setAttribute('color',new T.Float32BufferAttribute(col,3));g.computeVertexNormals();const m=new T.Mesh(g,this.terrainMaterial);m.receiveShadow=true;m.position.set(x*512,0,z*512);this.tiles.set(k,m);this.world.add(m);}
     for(const [k,m] of this.tiles)if(!wanted.has(k)){this.world.remove(m);m.geometry.dispose();this.tiles.delete(k);}
@@ -120,12 +121,12 @@ export class MoonRenderer{
     let sparks=0,rings=0;for(const effect of g.effects||[]){if(rings>=32)break;const age=1-effect.life/(effect.maxLife||1),r=(effect.kind==='explosion'?24:7)*age+1;dummy.position.set(effect.position.x,effect.position.y,effect.position.z);dummy.rotation.set(Math.PI/2,0,0);dummy.scale.setScalar(r);dummy.updateMatrix();this.rings.setMatrixAt(rings++,dummy.matrix);for(let i=0;i<8&&sparks<240;i++){const a=i*2.4+(effect.id||0),dist=r*(1+i%3);dummy.position.set(effect.position.x+Math.sin(a)*dist,effect.position.y+Math.sin(i*4)*dist*.5,effect.position.z+Math.cos(a)*dist);dummy.rotation.set(a,age*8,a);dummy.scale.setScalar(Math.max(.2,(1-age)*(effect.kind==='explosion'?2.5:.9)));dummy.updateMatrix();this.sparks.setMatrixAt(sparks++,dummy.matrix);}}
     this.sparks.count=sparks;this.rings.count=this.settings.reducedFlash?0:rings;this.sparks.instanceMatrix.needsUpdate=true;this.rings.instanceMatrix.needsUpdate=true;
     const speed=Math.hypot(p.velocity.x,p.velocity.y,p.velocity.z),chase=this.mode==='chase';
-    const offset=chase?V(-Math.sin(p.heading)*65,42,-Math.cos(p.heading)*65):V(0,82,-115);
+    const offset=chase?V(-Math.sin(p.heading)*40,26,-Math.cos(p.heading)*40):this.mode==='close'?V(0,42,-62):V(0,82,-115);
     const desired=position.clone().sub(this.origin).add(offset);desired.y=Math.max(desired.y,terrainHeight(desired.x+this.origin.x,desired.z+this.origin.z)+22);
     this.camera.position.lerp(desired,1-Math.exp(-dt*(this.settings.reducedMotion?10:5)));
-    const look=position.clone().sub(this.origin).add(chase?V(Math.sin(p.heading)*38,0,Math.cos(p.heading)*38):V(0,0,55));
+    const look=position.clone().sub(this.origin).add(chase?V(Math.sin(p.heading)*38,0,Math.cos(p.heading)*38):V(0,0,this.mode==='close'?18:55));
     this.target.lerp(look,1-Math.exp(-dt*8));this.camera.lookAt(this.target);
-    const fov=chase?58+clamp(speed/350,0,1)*10:55;this.camera.fov+= (fov-this.camera.fov)*(1-Math.exp(-dt*3));this.camera.updateProjectionMatrix();
+    const fov=chase?52+clamp(speed/350,0,1)*8:this.mode==='close'?50:55;this.camera.fov+= (fov-this.camera.fov)*(1-Math.exp(-dt*3));this.camera.updateProjectionMatrix();
     this.sun.target.position.copy(position).sub(this.origin);this.sun.position.copy(this.sun.target.position).add(V(-400,700,300));this.renderer.render(this.scene,this.camera);this.frameMs=performance.now()-before;
     this.frames.push(rawDt*1000);if(this.frames.length>180)this.frames.shift();
     // Deliberately slow adaptation prevents resolution pumping on one missed frame.

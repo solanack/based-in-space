@@ -1,6 +1,7 @@
 import {createGame,step,terrainHeight} from './game/simulation.js';
 import {loadSave,saveGame} from './persistence/save.js';
 import {createControls} from './input/controls.js';
+import {mapFlightIntent} from './input/flight-mapping.js';
 import {createHUD} from './ui/hud.js';
 import {MoonRenderer} from './render/scene.js';
 import {GameAudio} from './audio/manager.js';
@@ -26,15 +27,17 @@ try{
  const markers=document.createElement('div');markers.id='world-markers';markers.setAttribute('aria-hidden','true');document.getElementById('app').append(markers);
  const markerPool=[];for(let n=0;n<36;n++){const m=document.createElement('div');m.className='contact-marker';markers.append(m);markerPool.push(m);}
  function updateMarkers(){markers.hidden=screen!=='playing';let idx=0;const p=game.player.position;
-   for(const e of [...game.enemies,...game.base.filter(b=>b.hp>0)]){if(idx>=markerPool.length)break;const dist=Math.hypot(e.position.x-p.x,e.position.y-p.y,e.position.z-p.z),pt=renderer.project(e.position),base=!!e.name,m=markerPool[idx++];m.hidden=false;m.className='contact-marker'+(base?' installation':'')+(game.lock.targetId===e.id?' selected':'');
-     const x=Math.max(24,Math.min(innerWidth-24,pt.x)),y=Math.max(95,Math.min(innerHeight-105,pt.y));m.style.left=x+'px';m.style.top=y+'px';m.classList.toggle('offscreen',!pt.visible);m.textContent=(pt.visible?'': '◇ ')+(base?e.name:e.role.toUpperCase())+' '+Math.round(dist)+'m';
+   const nearest=game.enemies.filter(e=>e.hp>0).sort((a,b)=>Math.hypot(a.position.x-p.x,a.position.z-p.z)-Math.hypot(b.position.x-p.x,b.position.z-p.z)).slice(0,6);
+   const home=game.phase==='siege'?game.base.filter(b=>b.hp>0).slice(0,1):[];
+   for(const e of [...nearest,...home]){if(idx>=markerPool.length)break;const pt=renderer.project(e.position),base=!!e.name,m=markerPool[idx++];m.hidden=false;m.className='contact-marker'+(base?' installation':'')+(game.lock.targetId===e.id?' selected':'');
+     const x=Math.max(28,Math.min(innerWidth-28,pt.x)),y=Math.max(70,Math.min(innerHeight-120,pt.y));m.style.left=x+'px';m.style.top=y+'px';m.classList.toggle('offscreen',!pt.visible);m.textContent=base?'⌂':'';
    }for(;idx<markerPool.length;idx++)markerPool[idx].hidden=true;
    const target=game.enemies.find(e=>e.id===game.lock.targetId)||game.enemies.filter(e=>e.hp>0).sort((a,b)=>Math.hypot(a.position.x-p.x,a.position.z-p.z)-Math.hypot(b.position.x-p.x,b.position.z-p.z))[0];
    const ret=document.getElementById('target-reticle');if(target){const travel=Math.hypot(target.position.x-p.x,target.position.z-p.z)/560,lead={x:target.position.x+target.velocity.x*travel,y:target.position.y+target.velocity.y*travel,z:target.position.z+target.velocity.z*travel},point=renderer.project(lead);const bounds=document.getElementById('hud').getBoundingClientRect();ret.style.left=((point.visible?point.x:innerWidth/2)-bounds.left)+'px';ret.style.top=((point.visible?point.y:innerHeight/2)-bounds.top)+'px';}
  }
  let hudElapsed=0;
  function frame(now){const raw=Math.max(0,(now-last)/1000);last=now;const dt=Math.min(raw,.1);
-   if(screen==='playing'&&!frozen){accumulator=Math.min(accumulator+dt,.1);input=controls.sample();if(input.aimPoint){const aim=renderer.aimAt(input.aimPoint.x,input.aimPoint.y,game.player);if(aim)Object.assign(input,aim);}
+   if(screen==='playing'&&!frozen){accumulator=Math.min(accumulator+dt,.1);input=mapFlightIntent(controls.sample(),renderer.flightBasis());if(input.aimPoint){const aim=renderer.aimAt(input.aimPoint.x,input.aimPoint.y,game.player);if(aim)Object.assign(input,aim);}
      while(accumulator>=1/60){step(game,input,1/60);accumulator-=1/60;}
      if(game.phase!==previousPhase){previousPhase=game.phase;if(game.phase==='failed'||game.phase==='debrief'){saveGame(game);show(game.phase==='debrief'?'won':'lost');}}
    }

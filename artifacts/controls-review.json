@@ -1,0 +1,303 @@
+{
+  "runId": "moonfall-2026-10-17-pass2",
+  "captures": [
+    {
+      "name": "844x390-controls-fixed",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "path": "artifacts/qa-controls-review/844x390-controls-fixed.png",
+      "metrics": {
+        "calls": 78,
+        "triangles": 48618,
+        "geometries": 86,
+        "textures": 4,
+        "dpr": 1,
+        "renderMs": 1,
+        "frameMs": 352.4475524475621,
+        "camera": "close",
+        "terrainChunks": 25,
+        "origin": {
+          "x": -0.0,
+          "z": -0.0
+        },
+        "renderer": "WebGL2",
+        "postPasses": 0,
+        "shadowLights": 1,
+        "entities": 3,
+        "projectiles": 16,
+        "physics": {
+          "engine": "custom swept-sphere",
+          "fixedHz": 60
+        },
+        "audio": {
+          "state": "running",
+          "voices": 0,
+          "muted": false,
+          "playing": true
+        }
+      },
+      "pixelChannelStdDev": [
+        30.673550323315634,
+        27.137698528101332,
+        27.91229309237847
+      ],
+      "entropy": 7.170273357838796,
+      "canvasStdDev": [
+        28.737243238457243,
+        25.18776270668507,
+        26.083470512256902
+      ]
+    },
+    {
+      "name": "640x360-controls-fixed",
+      "viewport": {
+        "width": 640,
+        "height": 360
+      },
+      "path": "artifacts/qa-controls-review/640x360-controls-fixed.png",
+      "metrics": {
+        "calls": 78,
+        "triangles": 48618,
+        "geometries": 86,
+        "textures": 4,
+        "dpr": 0.85,
+        "renderMs": 1.300000000745058,
+        "frameMs": 295.6366666666664,
+        "camera": "close",
+        "terrainChunks": 25,
+        "origin": {
+          "x": -0.0,
+          "z": -0.0
+        },
+        "renderer": "WebGL2",
+        "postPasses": 0,
+        "shadowLights": 1,
+        "entities": 3,
+        "projectiles": 16,
+        "physics": {
+          "engine": "custom swept-sphere",
+          "fixedHz": 60
+        },
+        "audio": {
+          "state": "running",
+          "voices": 0,
+          "muted": false,
+          "playing": true
+        }
+      },
+      "pixelChannelStdDev": [
+        32.01189456047889,
+        28.274866294376068,
+        28.995518053416017
+      ],
+      "entropy": 7.293249424327122,
+      "canvasStdDev": [
+        29.788664583275885,
+        26.093771198534707,
+        26.99464554006823
+      ]
+    },
+    {
+      "name": "932x430-controls-fixed",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "path": "artifacts/qa-controls-review/932x430-controls-fixed.png",
+      "metrics": {
+        "calls": 76,
+        "triangles": 48402,
+        "geometries": 86,
+        "textures": 4,
+        "dpr": 0.85,
+        "renderMs": 0.900000000372529,
+        "frameMs": 269.15666666666635,
+        "camera": "close",
+        "terrainChunks": 25,
+        "origin": {
+          "x": -0.0,
+          "z": -0.0
+        },
+        "renderer": "WebGL2",
+        "postPasses": 0,
+        "shadowLights": 1,
+        "entities": 3,
+        "projectiles": 17,
+        "physics": {
+          "engine": "custom swept-sphere",
+          "fixedHz": 60
+        },
+        "audio": {
+          "state": "running",
+          "voices": 0,
+          "muted": false,
+          "playing": true
+        }
+      },
+      "pixelChannelStdDev": [
+        30.1215163750857,
+        26.559892621719975,
+        27.330214198196387
+      ],
+      "entropy": 7.166466815464156,
+      "canvasStdDev": [
+        28.97006357258643,
+        25.354092319168235,
+        26.238457775545825
+      ]
+    }
+  ],
+  "checks": {
+    "screenRelativeFlight": [
+      {
+        "stick": [
+          30,
+          0
+        ],
+        "before": {
+          "x": 0,
+          "y": 80,
+          "z": -190
+        },
+        "after": {
+          "x": -6.352340476041006,
+          "y": 80,
+          "z": -190.00563902655756
+        },
+        "mappedInput": {
+          "aimPoint": null,
+          "moveX": -0.7012479906739679,
+          "moveY": -0.001998206877109644,
+          "aimX": -0.0,
+          "aimY": 0,
+          "altitude": 0,
+          "fire": false,
+          "missile": false,
+          "boost": false,
+          "brake": false,
+          "countermeasure": false
+        }
+      },
+      {
+        "stick": [
+          -30,
+          0
+        ],
+        "before": {
+          "x": -35.09405792389374,
+          "y": 80,
+          "z": -190.44014150939282
+        },
+        "after": {
+          "x": -28.742018230778623,
+          "y": 80,
+          "z": -190.38100913424833
+        },
+        "mappedInput": {
+          "aimPoint": null,
+          "moveX": 0.7012438166958836,
+          "moveY": 0.00313796124754063,
+          "aimX": -0.0,
+          "aimY": 0,
+          "altitude": 0,
+          "fire": false,
+          "missile": false,
+          "boost": false,
+          "brake": false,
+          "countermeasure": false
+        }
+      },
+      {
+        "stick": [
+          0,
+          -30
+        ],
+        "before": {
+          "x": 0.00045557835577836325,
+          "y": 80,
+          "z": -190.67281350721692
+        },
+        "after": {
+          "x": 0.06493863722516731,
+          "y": 82.69284339020649,
+          "z": -184.32080395570378
+        },
+        "mappedInput": {
+          "aimPoint": null,
+          "moveX": 0.005120798820369208,
+          "moveY": 0.7012321403604107,
+          "aimX": 0,
+          "aimY": 0,
+          "altitude": 0.5259381282108555,
+          "fire": false,
+          "missile": false,
+          "boost": false,
+          "brake": false,
+          "countermeasure": false
+        }
+      },
+      {
+        "stick": [
+          0,
+          30
+        ],
+        "before": {
+          "x": 0.20945301789686566,
+          "y": 94.87905483861171,
+          "z": -155.5743331678291
+        },
+        "after": {
+          "x": 0.20885261349880127,
+          "y": 92.18621144840522,
+          "z": -161.92668164856727
+        },
+        "mappedInput": {
+          "aimPoint": null,
+          "moveX": -4.6718398413906395e-05,
+          "moveY": -0.7012508360582487,
+          "aimX": 0,
+          "aimY": 0,
+          "altitude": -0.5259381282108555,
+          "fire": false,
+          "missile": false,
+          "boost": false,
+          "brake": false,
+          "countermeasure": false
+        }
+      }
+    ],
+    "twoThumbFlight": {
+      "aimPoint": null,
+      "moveX": 0.6454098726825999,
+      "moveY": 0.31036408309135577,
+      "aimX": 0,
+      "aimY": 0,
+      "altitude": 0.23277306231851683,
+      "fire": true,
+      "missile": false,
+      "boost": true,
+      "brake": false,
+      "countermeasure": false
+    },
+    "hud-844": {
+      "visibleText": "\u2161\n\u2302\n048\nM/S",
+      "layoutIssues": []
+    },
+    "heroPixels-844": 123.6248189708349,
+    "hud-640": {
+      "visibleText": "\u2161\n\u2302\n004\nM/S",
+      "layoutIssues": []
+    },
+    "heroPixels-640": 114.11590485134639,
+    "hud-932": {
+      "visibleText": "\u2161\n\u2302\n000\nM/S",
+      "layoutIssues": []
+    },
+    "heroPixels-932": 136.305181469533,
+    "pauseResume": true
+  },
+  "errors": [],
+  "resources": []
+}
