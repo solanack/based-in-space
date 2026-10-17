@@ -30,3 +30,9 @@ body[data-context=lost]:after{content:'GRAPHICS CONTEXT LOST · WAITING TO RESTO
 .flight-button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.flight-button.fire span{display:none}.flight-button.missile span{position:absolute;right:7px;bottom:5px;font-size:10px}.flight-button.missile{background:conic-gradient(#bd493866 var(--lock-progress,0%),#14243580 0%)}.flight-button.missile.locked{border-color:#fff;box-shadow:0 0 12px #ffe0c144}
 .contact-marker{width:14px;height:14px;padding:0!important;font-size:15px;color:#a2cfd8}.contact-marker:before{width:9px;height:9px;top:0;border-color:#ff7966aa}.contact-marker.selected:before{width:18px;height:18px}.contact-marker.installation:before{display:none}.contact-marker.offscreen:before{display:block;transform:translateX(-50%) rotate(45deg);width:5px;height:5px}.contact-marker.installation.offscreen:before{display:none}
 #hud #pause-button{position:absolute;right:0;top:7px}
+/* Floating thumb origin prevents an initial touch from jerking the aircraft. */
+#flight-stick{width:180px;height:160px;border:0;border-radius:0;background:none}
+#flight-stick:before,#flight-stick:after{display:none}
+.stick-base{position:absolute;left:50%;top:50%;width:110px;height:110px;transform:translate(-50%,-50%);border:1px solid #d4e6f343;border-radius:50%;background:radial-gradient(circle,#1b2f4244,#08132144);pointer-events:none}
+.stick-cross:before,.stick-cross:after{content:'';position:absolute;background:#c3dfec2c}.stick-cross:before{left:15%;top:50%;width:70%;height:1px}.stick-cross:after{top:15%;left:50%;width:1px;height:70%}
+.arcade-flight #aim-zone{display:none}

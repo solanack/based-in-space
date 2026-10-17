@@ -13,7 +13,7 @@ async function start(){await audio.unlock();frozen=false;game=createGame(loadSav
 async function resume(){await audio.unlock();show('playing');}
 function pause(){if(screen==='playing')show('paused');}
 function upgrade(kind){const profile=game.save;if(!['hull','shield','engines'].includes(kind))return;const level=profile.upgrades[kind],cost=100*(level+1);if(level>=5||profile.credits<cost)return;profile.credits-=cost;profile.upgrades[kind]++;saveGame(profile);hud.update(game,renderer.metrics());hud.show('won');}
-function setting(){audio.settings({...controls.settings,muted:controls.settings.mute,dynamicRange:controls.settings.dynamicRange==='full'?'wide':'compact'});renderer.settings=controls.settings;renderer.resize();}
+function setting(){if(renderer.controlStyle!==controls.settings.flightStyle){renderer.controlStyle=controls.settings.flightStyle;renderer.mode=controls.settings.flightStyle==='hover'?'close':'flight';}audio.settings({...controls.settings,muted:controls.settings.mute,dynamicRange:controls.settings.dynamicRange==='full'?'wide':'compact'});renderer.settings=controls.settings;renderer.resize();}
 try{
  controls=createControls(document.body);
  renderer=new MoonRenderer(canvas,game,controls.settings);
@@ -35,9 +35,10 @@ try{
    const target=game.enemies.find(e=>e.id===game.lock.targetId)||game.enemies.filter(e=>e.hp>0).sort((a,b)=>Math.hypot(a.position.x-p.x,a.position.z-p.z)-Math.hypot(b.position.x-p.x,b.position.z-p.z))[0];
    const ret=document.getElementById('target-reticle');if(target){const travel=Math.hypot(target.position.x-p.x,target.position.z-p.z)/560,lead={x:target.position.x+target.velocity.x*travel,y:target.position.y+target.velocity.y*travel,z:target.position.z+target.velocity.z*travel},point=renderer.project(lead);const bounds=document.getElementById('hud').getBoundingClientRect();ret.style.left=((point.visible?point.x:innerWidth/2)-bounds.left)+'px';ret.style.top=((point.visible?point.y:innerHeight/2)-bounds.top)+'px';}
  }
+ function readIntent(){let value=mapFlightIntent(controls.sample(),renderer.flightBasis(),game.player,controls.settings.flightStyle);if(value.aimPoint){const aim=renderer.aimAt(value.aimPoint.x,value.aimPoint.y,game.player);if(aim)Object.assign(value,aim);}return value;}
  let hudElapsed=0;
  function frame(now){const raw=Math.max(0,(now-last)/1000);last=now;const dt=Math.min(raw,.1);
-   if(screen==='playing'&&!frozen){accumulator=Math.min(accumulator+dt,.1);input=mapFlightIntent(controls.sample(),renderer.flightBasis());if(input.aimPoint){const aim=renderer.aimAt(input.aimPoint.x,input.aimPoint.y,game.player);if(aim)Object.assign(input,aim);}
+   if(screen==='playing'&&!frozen){accumulator=Math.min(accumulator+dt,.1);input=readIntent();
      while(accumulator>=1/60){step(game,input,1/60);accumulator-=1/60;}
      if(game.phase!==previousPhase){previousPhase=game.phase;if(game.phase==='failed'||game.phase==='debrief'){saveGame(game);show(game.phase==='debrief'?'won':'lost');}}
    }
@@ -47,7 +48,7 @@ try{
  }
  requestAnimationFrame(frame);
  globalThis.__THREE_GAME_DIAGNOSTICS__=()=>({...renderer.metrics(),entities:game.enemies.length,projectiles:game.projectiles.length,physics:{engine:'custom swept-sphere',fixedHz:60},audio:audio.diagnostics()});
- if(qa){globalThis.moonfall={get game(){return game},get input(){return input},get screen(){return screen},renderer,controls,audio,start,pause,resume,upgrade,
+ if(qa){globalThis.moonfall={get game(){return game},get input(){return input},get screen(){return screen},renderer,controls,audio,start,pause,resume,upgrade,readIntent,
    step:(frames,control={})=>{for(let i=0;i<frames;i++)step(game,typeof control==='function'?control(game):control,1/60);hud.update(game,renderer.metrics());renderer.frame(game,1/60,1,control);},
    setState:async name=>{frozen=true;game=createGame(loadSave());if(name==='active-play')game.time=5;else if(name==='siege'){game.time=45;step(game,{},1/60);step(game,{},1/60);}else if(name==='failed'){game.player.hp=0;step(game,{},1/60);show('lost');}else if(name==='debrief'){game.phase='debrief';game.score=1500;saveGame(game);show('won');}else throw new Error('Unsupported QA state '+name);if(name==='active-play'||name==='siege')show('playing');hud.update(game,renderer.metrics());renderer.frame(game,1/60,1,{});return {state:name};},
    setPausedForScreenshot:paused=>{frozen=paused;},

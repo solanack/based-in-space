@@ -1,5 +1,6 @@
 // Player controls are screen-relative; simulation and bots remain in world space.
-export function mapFlightIntent(intent,basis){
+export function mapFlightIntent(intent,basis,player,style='arcade'){
+ if(style==='arcade')return {...intent,flightMode:'arcade',turn:intent.moveX,climb:intent.moveY,aimPoint:null,aimX:0,aimY:0,assist:true};
  const horizontal=(x,z)=>{const n=Math.hypot(x,z)||1;return {x:x/n,z:z/n};};
  const right=horizontal(basis.right.x,basis.right.z),forward=horizontal(basis.forward.x,basis.forward.z);
  return {...intent,

@@ -6,7 +6,7 @@ ff=Path('/tmp/moonfall-browsers/ffmpeg-1011/ffmpeg-linux');ff.parent.mkdir(paren
 if not ff.exists(): ff.symlink_to('/usr/bin/ffmpeg')
 from playwright.sync_api import sync_playwright
 from PIL import Image, ImageStat
-ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'artifacts'/('qa-controls-review' if '--controls-review' in sys.argv else 'qa-production' if '--production' in sys.argv else 'qa-context' if '--context-only' in sys.argv else 'qa-final' if '--quick' in sys.argv else 'qa-2026-10-17');OUT.mkdir(parents=True,exist_ok=True)
+ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'artifacts'/('qa-flight-feel' if '--flight-feel' in sys.argv else 'qa-controls-review' if '--controls-review' in sys.argv else 'qa-production' if '--production' in sys.argv else 'qa-context' if '--context-only' in sys.argv else 'qa-final' if '--quick' in sys.argv else 'qa-2026-10-17');OUT.mkdir(parents=True,exist_ok=True)
 class Quiet(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=http.server.ThreadingHTTPServer(('127.0.0.1',5188),functools.partial(Quiet,directory=str(ROOT/'dist')))
@@ -32,6 +32,23 @@ try:
   context=browser.new_context(viewport={'width':844,'height':390},is_mobile=True,has_touch=True,device_scale_factor=1,record_video_dir=str(OUT/'video'),record_video_size={'width':844,'height':390})
   page=context.new_page();page.on('pageerror',lambda e:report['errors'].append(str(e)));page.on('console',lambda m:report['errors'].append(m.text) if m.type=='error' else None);page.on('response',lambda r:report['resources'].append({'url':r.url,'status':r.status}) if r.status>=400 else None)
   page.goto(('https://based-in-space-preview.vercel.app/' if '--production' in sys.argv else 'http://127.0.0.1:5188/')+'?qa=1',wait_until='networkidle');page.wait_for_function('!!window.moonfall');page.locator('#deploy').click();page.wait_for_timeout(1200)
+  if '--flight-feel' in sys.argv:
+   cdp=context.new_cdp_session(page)
+   def finger(kind,points):cdp.send('Input.dispatchTouchEvent',{'type':kind,'touchPoints':[{'id':i,'x':x,'y':y,'radiusX':6,'radiusY':6,'force':1} for i,x,y in points]})
+   page.evaluate('moonfall.setPausedForScreenshot(true)');box=page.locator('#flight-stick').bounding_box();sx=box['x']+box['width']/2;sy=box['y']+box['height']/2
+   finger('touchStart',[(1,sx+22,sy+12)]);raw=page.evaluate('moonfall.controls.sample()');assert raw['moveX']==0 and raw['moveY']==0;report['checks']['floatingOriginNoJump']=True;finger('touchEnd',[])
+   def flight_sample(dx,dy,extra=None):
+    before=page.evaluate('({heading:moonfall.game.player.heading,y:moonfall.game.player.position.y,z:moonfall.game.player.position.z})');finger('touchStart',[(1,sx,sy)]);finger('touchMove',[(1,sx+dx,sy+dy)]);intent=page.evaluate('moonfall.readIntent()');page.evaluate('moonfall.step(24,moonfall.readIntent())');after=page.evaluate('({heading:moonfall.game.player.heading,y:moonfall.game.player.position.y,z:moonfall.game.player.position.z})');finger('touchEnd',[]);return {'before':before,'after':after,'intent':intent}
+   right=flight_sample(35,0);left=flight_sample(-35,0);up=flight_sample(0,-35);down=flight_sample(0,35)
+   report['checks']['noseTurnsAndPitch']=[right,left,up,down]
+   assert right['after']['heading']<right['before']['heading'];assert left['after']['heading']>left['before']['heading'];assert up['after']['y']>up['before']['y'];assert down['after']['y']<down['before']['y'];report['checks']['noseTurnsAndPitch']=[right,left,up,down]
+   fire=page.locator('[data-action=fire]').bounding_box();fx=fire['x']+fire['width']/2;fy=fire['y']+fire['height']/2
+   finger('touchStart',[(1,sx,sy),(2,fx,fy)]);finger('touchMove',[(1,sx+28,sy-18),(2,fx,fy-35)]);intent=page.evaluate('moonfall.readIntent()');assert intent['fire'] and intent['boost'] and intent['turn']>0 and intent['climb']>0;page.evaluate('moonfall.step(30,moonfall.readIntent())');report['checks']['twoThumbCombat']=intent;finger('touchEnd',[])
+   page.evaluate('moonfall.setPausedForScreenshot(false)');page.keyboard.down('KeyD');page.keyboard.down('Space');page.wait_for_timeout(1000);page.keyboard.up('KeyD');page.wait_for_timeout(1000);page.keyboard.down('KeyW');page.wait_for_timeout(700);page.keyboard.up('KeyW');page.keyboard.up('Space');page.evaluate('moonfall.setPausedForScreenshot(true)')
+   for w,h in [(844,390),(640,360),(932,430)]:
+    page.set_viewport_size({'width':w,'height':h});page.wait_for_timeout(250);assert not check_layout(bounds(page),w,h);page.evaluate('for(let n=0;n<30;n++)moonfall.renderer.frame(moonfall.game,1/60,1,moonfall.readIntent())');capture(page,f'{w}x{h}-flight');assert page.evaluate('moonfall.renderer.metrics().camera')=='flight'
+   page.locator('#pause-button').click();assert page.evaluate('moonfall.screen')=='paused';page.locator('#deploy').click();page.evaluate('moonfall.setPausedForScreenshot(false)');report['checks']['pauseClearsControls']=not page.evaluate('moonfall.controls.sample().fire')
+   context.close();browser.close();assert not report['errors'];assert not report['resources'];sys.exit(0)
   if '--controls-review' in sys.argv:
    cdp=context.new_cdp_session(page)
    def send_touch(kind,points):cdp.send('Input.dispatchTouchEvent',{'type':kind,'touchPoints':[{'id':i,'x':x,'y':y,'radiusX':5,'radiusY':5,'force':1} for i,x,y in points]})

@@ -1,4 +1,5 @@
 import {clamp,vec,copy,sub,add,scale,dot,length,distance,normalize,angleDelta,forward,sweptSphere,turnToward,sphereImpactTime} from './math.js';
+import {arcadeVelocity} from '../flight/arcade.js';
 import {migrateSave} from '../persistence/save.js';
 
 export const TUNING=Object.freeze({speed:115,boostSpeed:330,brakeSpeed:35,acceleration:5,altitudeSpeed:65,maxAltitude:310,minClearance:8,playerRadius:5,projectileLimit:256,enemyLimit:32,effectLimit:80,eventLimit:64,lockTime:.65,lockRange:900,missileTurn:2.2,enemyMissileTurn:1.3,siegeDuration:75});
@@ -40,14 +41,15 @@ function damageEnemy(g,e,amount){
 function updatePlayer(g,i,dt){
  const p=g.player;p.previous=copy(p.position);
  const mx=clamp(Number(i.moveX)||0,-1,1),mz=clamp(Number(i.moveY)||0,-1,1),mag=Math.min(1,Math.hypot(mx,mz));
- const boosting=!!i.boost&&p.boostEnergy>2&&mag>.05;
+ const arcade=i.flightMode==='arcade';
+ const boosting=!!i.boost&&p.boostEnergy>2&&(arcade||mag>.05);
  p.boostEnergy=clamp(p.boostEnergy+(boosting?-28:19)*dt,0,100);
  const speed=(i.brake?TUNING.brakeSpeed:boosting?TUNING.boostSpeed:TUNING.speed)*(1+.045*g.save.upgrades.engines);
- const horizontal=Math.hypot(mx,mz)||1,desired=vec(mx/horizontal*speed*mag,clamp(Number(i.altitude)||0,-1,1)*TUNING.altitudeSpeed,mz/horizontal*speed*mag);
- const response=1-Math.exp(-TUNING.acceleration*dt);
+ const horizontal=Math.hypot(mx,mz)||1,desired=arcade?arcadeVelocity(p,i,dt,speed,p.position.y-terrainHeight(p.position.x,p.position.z)):vec(mx/horizontal*speed*mag,clamp(Number(i.altitude)||0,-1,1)*TUNING.altitudeSpeed,mz/horizontal*speed*mag);
+ const response=1-Math.exp(-(arcade?12:TUNING.acceleration)*dt);
  p.velocity=add(p.velocity,scale(sub(desired,p.velocity),response));p.position=add(p.position,scale(p.velocity,dt));
- if(mag>.05)p.heading+=angleDelta(p.heading,Math.atan2(mx,mz))*(1-Math.exp(-8*dt));
- const targetPitch=clamp((Number(i.altitude)||0)*.4,-.55,.55);p.pitch+=(targetPitch-p.pitch)*(1-Math.exp(-5*dt));
+ if(!arcade&&mag>.05)p.heading+=angleDelta(p.heading,Math.atan2(mx,mz))*(1-Math.exp(-8*dt));
+ if(!arcade){const targetPitch=clamp((Number(i.altitude)||0)*.4,-.55,.55);p.pitch+=(targetPitch-p.pitch)*(1-Math.exp(-5*dt));}
  const travel=sub(p.position,p.previous),samples=Math.max(1,Math.ceil(length(travel)/5));
  for(let n=1;n<=samples;n++){const point=add(p.previous,scale(travel,n/samples)),floor=terrainHeight(point.x,point.z)+TUNING.minClearance;if(point.y<floor){p.position=vec(point.x,floor,point.z);p.velocity.y=Math.max(0,p.velocity.y);damagePlayer(g,22*dt);if(g.time-g._terrainEvent>.5||!g._terrainEvent){event(g,'terrain-hit');g._terrainEvent=g.time;}break;}}
  p.position.y=Math.min(TUNING.maxAltitude,p.position.y);
@@ -56,10 +58,11 @@ function updatePlayer(g,i,dt){
  if(impact){const point=add(p.previous,scale(sub(p.position,p.previous),impact.t)),normal=normalize(sub(point,impact.b.position));p.position=add(impact.b.position,scale(length(normal)>.01?normal:vec(0,1,0),impact.b.radius+TUNING.playerRadius+.01));p.velocity=scale(p.velocity,.25);damagePlayer(g,12*dt);}
  p.heat=Math.max(0,p.heat-23*dt);if(p.heat<25)p.overheated=false;
  if(g.time-g._damageTime>4)p.shield=Math.min(p.maxShield,p.shield+10*dt);
- const aimMag=Math.hypot(i.aimX||0,i.aimY||0),aimHeading=aimMag>.15?Math.atan2(i.aimX,i.aimY):p.heading;
+ const aimMag=Math.hypot(i.aimX||0,i.aimY||0),aimHeading=!arcade&&aimMag>.15?Math.atan2(i.aimX,i.aimY):p.heading;
  p.aimHeading=aimHeading;p.aimDirection=forward(aimHeading,p.pitch);
+ if(arcade&&i.assist!==false){const target=g.enemies.filter(e=>e.hp>0&&distance(e.position,p.position)<650&&dot(normalize(sub(e.position,p.position)),p.aimDirection)>.97&&lineOfSight(p.position,e.position)).sort((a,b)=>distance(a.position,p.position)-distance(b.position,p.position))[0];if(target){const lead=add(target.position,scale(target.velocity,Math.min(1,distance(target.position,p.position)/WEAPONS.pulse.speed)));p.aimDirection=turnToward(p.aimDirection,sub(lead,p.position),.12);}}
  g._shot-=dt;g._missileCooldown-=dt;g._cmCooldown-=dt;
- if(i.fire&&g._shot<=0&&!p.overheated){const right=vec(Math.cos(aimHeading),0,-Math.sin(aimHeading)),up=vec(-Math.sin(aimHeading)*Math.sin(p.pitch),Math.cos(p.pitch),-Math.cos(aimHeading)*Math.sin(p.pitch));for(const side of [-1,1]){const muzzle=add(add(add(p.position,scale(p.aimDirection,2.07*3.2)),scale(right,side*.56*3.2)),scale(up,.42*3.2));projectile(g,'player','pulse',muzzle,p.aimDirection);}g._shot=WEAPONS.pulse.cooldown;p.heat+=WEAPONS.pulse.heat;event(g,'pulse');if(p.heat>=100){p.overheated=true;event(g,'overheat');}}
+ if(i.fire&&g._shot<=0&&!p.overheated){const socketForward=forward(aimHeading,p.pitch),right=vec(Math.cos(aimHeading),0,-Math.sin(aimHeading)),up=vec(-Math.sin(aimHeading)*Math.sin(p.pitch),Math.cos(p.pitch),-Math.cos(aimHeading)*Math.sin(p.pitch));for(const side of [-1,1]){const muzzle=add(add(add(p.position,scale(socketForward,2.07*3.2)),scale(right,side*.56*3.2)),scale(up,.42*3.2));projectile(g,'player','pulse',muzzle,p.aimDirection);}g._shot=WEAPONS.pulse.cooldown;p.heat+=WEAPONS.pulse.heat;event(g,'pulse');if(p.heat>=100){p.overheated=true;event(g,'overheat');}}
  updateLock(g,i,dt);
  if(i.countermeasure&&!g._heldCM&&g._cmCooldown<=0&&p.countermeasures>0){p.countermeasures--;g._cmCooldown=3;g.projectiles=g.projectiles.filter(q=>q.owner!=='enemy'||distance(q.position,p.position)>190);for(const e of g.enemies)if(distance(e.position,p.position)<200)e.cooldown=Math.max(e.cooldown,2);effect(g,'countermeasure',p.position,1);event(g,'countermeasure');}
  g._heldCM=!!i.countermeasure;
