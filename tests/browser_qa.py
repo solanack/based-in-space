@@ -32,6 +32,17 @@ try:
   context=browser.new_context(viewport={'width':844,'height':390},is_mobile=True,has_touch=True,device_scale_factor=1,record_video_dir=str(OUT/'video'),record_video_size={'width':844,'height':390})
   page=context.new_page();page.on('pageerror',lambda e:report['errors'].append(str(e)));page.on('console',lambda m:report['errors'].append(m.text) if m.type=='error' else None);page.on('response',lambda r:report['resources'].append({'url':r.url,'status':r.status}) if r.status>=400 else None)
   page.goto(('https://based-in-space-preview.vercel.app/' if '--production' in sys.argv else 'http://127.0.0.1:5188/')+'?qa=1',wait_until='networkidle');page.wait_for_function('!!window.moonfall');page.locator('#deploy').click();page.wait_for_timeout(1200)
+  if '--camera-review' in sys.argv:
+   page.evaluate('moonfall.setPausedForScreenshot(true)')
+   for width,height in [(844,390),(390,844)]:
+    page.set_viewport_size({'width':width,'height':height})
+    result=page.evaluate("""(()=>{const r=moonfall.renderer,g=moonfall.game;r.resize();for(let i=0;i<12;i++)r.frame(g,.2,1,moonfall.readIntent());const pos=r.hero.position.clone().sub(r.origin);const delta=r.camera.position.clone().sub(pos);const center=r.project(r.hero.position);return {distance:delta.length(),height:delta.y,center,fov:r.camera.fov};})()""")
+    assert result['distance']<43,result
+    assert result['center']['visible'],result
+    assert .35*height<result['center']['y']<.8*height,result
+    report['checks'][f'closeCamera-{width}x{height}']=result
+    capture(page,f'close-camera-{width}x{height}')
+   context.close();browser.close();assert not report['errors'];assert not report['resources'];sys.exit(0)
   if '--flight-feel' in sys.argv:
    cdp=context.new_cdp_session(page)
    def finger(kind,points):cdp.send('Input.dispatchTouchEvent',{'type':kind,'touchPoints':[{'id':i,'x':x,'y':y,'radiusX':6,'radiusY':6,'force':1} for i,x,y in points]})
