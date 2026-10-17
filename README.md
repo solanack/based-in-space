@@ -1,51 +1,39 @@
-# BASED IN SPACE
+# BASED IN SPACE — MOONFALL
 
-**Ten sectors. One interceptor. No brakes.**
+[Play the current build](https://based-in-space-preview.vercel.app/)
 
-A high-intensity 3D space combat flight game built with Three.js. Pilot a customizable interceptor through ten escalating sectors, weaving through hazards, engaging enemy formations, and facing unique boss encounters. Features chase and cockpit cameras, adaptive quality, hit-stop feedback, and a polished UI.
+Work-in-progress lunar defense slice: the owned glossy black/red/white RAZOR, free 3D flight, twin cannons, lock-on missiles, three hostile roles, and a destructible outpost siege. This feature branch replaces an incomplete archived ten-sector scaffold. It is not yet a verified mobile release.
 
-## Live Preview
+## Run locally
 
-Play the current build: [https://based-in-space-preview.vercel.app/](https://based-in-space-preview.vercel.app/)
+Node24 and Python3 required for checks/build. No npm install or remote runtime dependencies:
 
-## Features
-
-- **3D flight combat** — Smooth interceptor handling with banking, boosts, and precise aiming
-- **Ten sectors** — Progressively challenging levels with unique enemy compositions and environments
-- **Enemy & boss roster** — Dozens of ship types (fighters, carriers, drones, heavies) plus dedicated boss encounters
-- **Visual systems** — GLTF models, material dressing, VFX, post-processing, and adaptive quality scaling
-- **UI & progression** — Level select, hangar, settings (camera, controls, audio), and local progress tracking
-- **Input** — Keyboard, gamepad, and optional gyro support
-- **Audio** — Dynamic soundscape with hit feedback and event-driven cues
-
-## Tech Stack
-
-- **Rendering**: Three.js (bundled as `vendor/three.module.js`) + custom GLTFLoader
-- **Architecture**: Vanilla ES modules (no build step required for local play)
-- **Assets**: Authored `.glb` models under `assets/models/`
-- **Persistence**: Local storage for settings and level progress
-- **Deployment**: Static hosting (Vercel-compatible)
-
-## Getting Started
-
-No build step is required. Serve the directory with any static server:
-
-```bash
-# Python
-python3 -m http.server 8080
-
-# Or Node
-npx serve .
+```sh
+npm test
+npm run check
+npm run build
+npm run preview
 ```
 
-Open `http://localhost:8080`.
+Open http://localhost:5188 in landscape. `npm run dev` serves source directly. The build is ordinary static files in `dist/`; deploy tooling is intentionally absent. The original README preview address represents the old deployment and is not evidence of this feature's release.
 
-### Debug / QA modes
+## Controls
 
-Append query parameters:
-- `?debug` — Extra diagnostics and metrics
-- `?qa` — Unlocks all levels for testing
+Arcade flight is the default: the ship cruises forward, the floating stick turns/pitches, and release returns to level flight. Hover remains available in paused flight settings.
 
-## License
+- Touch: floating left stick turns the nose and controls climb/dive; forward cruise is automatic; FIRE, BOOST, BRAKE and countermeasure icons; hold MISSILE to lock, release to launch. Slide upward while holding FIRE to boost with two thumbs.
+- Keyboard: A/D or left/right turn, W/S or up/down climb/dive, Space fire, Shift boost, Control brake, M hold/release missile, X countermeasure, Escape pause.
+- Mouse: aim at world position and left button fire. Gamepad: left stick turns and pitches, triggers operate weapons, A boost, B brake, X flare.
+- Pause opens settings for handedness, layout, size, sensitivity, reduced motion/flashes, quality and audio. Portrait intentionally pauses and shows a rotate notice.
 
-All rights reserved. Source extracted from the live preview for archival and continued development.
+Mission: patrol and intercept; three bomber/escort waves pressure the reactor, comms, hangar and fuel installation independently. Surviving75seconds of siege with no bombers remaining and a surviving base reaches debrief. Credits buy hull/shield/engine upgrades. Profile saves migrate older data and tolerate unavailable local storage. Restart starts a fresh sortie.
+
+One WebGL2 context, fixed60Hz simulation with bounded backlog, interpolated rendering,25 streamed terrain chunks, relative swept-sphere collision, bounded missiles/VFX, floating visual origin, and adaptive DPR. Audio synthesizes locally after deployment click. Three.js0.180.0 is vendored under MIT; owner assets remain all rights reserved. See [asset provenance](docs/asset-provenance.md).
+
+## Verification and limits
+
+`npm test` runs31 deterministic simulation/control checks. `npm run test:bot` completes three normal-input siege playtests. Browser QA is provided as `npm run qa` and uses installed Python Playwright, system Chromium and ffmpeg; the runner must allow localhost sockets. In this managed environment Chromium needs elevated local socket permission. Current measured status, incomplete gates and blockers are in [evidence](artifacts/final-evidence.md) and [checkpoint](artifacts/game-progress.md).
+
+Chrome input/lifecycle checks, target-viewport captures and motion evidence are recorded. Real Android tactile/performance acceptance remains unverified. No production merge/deployment. No service worker: no stale application cache, but cold offline loading is not guaranteed. Progress/upgrades persist; mid-sortie recovery checkpoints and localized ship-component destruction remain follow-on work. The region is procedural, not a claim of a finished expansive open world.
+
+Fictional entertainment. No Elon Musk/SpaceX affiliation or endorsement.

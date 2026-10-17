@@ -1,0 +1,9 @@
+# Asset provenance
+
+RAZOR: owner-directed reuse from solanack/Space-Is-Based, upgrade/phase36-threejs-razor, commit55ec601d9c346a0ac288a338d9692a9a5b58cda0, js/phase36-three-ship.mjs; version razor-live3d-obsidian-3. Original authored deterministic geometry. Donor README/livery report and root phase36-three.test.cjs inspected. Its test validates the old Pixi overlay integration and is not falsely reported as passing in this game. Source geometry/material functions through createRazor retained in src/assets/razor.mjs. Removed CDN loader, unrelated battery factory, overlay renderer and global auto-install bridge. No old movement, enemy rules, second context or automatic download retained. Source donor remains read-only.
+
+Model nose+Z, up+Y. Player uniform scale3.2. Actual cannon sockets ±.56,.42,2.07 and nozzle sockets ±.77,.20,-2.07 in model units. Scene applies position, yaw/pitch and bank; simulation uses simplified sphere proxy independent of surface details. Fine micro group disabled outside high quality. Existing static material batching preserved. No GLB pipeline required for already batched owner geometry; optional future export via official GLTFExporter after measuring benefit. Inspection camera hooks capture top/front/side and in-game views.
+
+Three.js0.180.0: official mrdoob/three.js r180 build/three.module.min.js and build/three.core.min.js retrieved through authorized GitHub connector. Local vendor files eliminate CDN/offline fetch dependence. MIT terms in vendor/LICENSE.three.txt. No other package runtime dependency.
+
+Terrain, base modules, enemy silhouettes, Earth illustration, regolith map, HUD icons and Web Audio synthesis: original code authored for this feature. No external model license, generation service, paid API, protected brand logo or endorsement assumed. Fictional Moonfall settlement is unaffiliated with Elon Musk or SpaceX.

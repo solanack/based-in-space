@@ -1,11 +1,11 @@
 {
-  "name": "BASED IN SPACE",
-  "short_name": "BASED",
-  "description": "Ten sectors. One interceptor. No brakes.",
+  "name": "BASED IN SPACE \u2014 Moonfall",
+  "short_name": "MOONFALL",
+  "description": "Free-flight lunar defense in the RAZOR interceptor.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#111411",
-  "theme_color": "#111411",
+  "background_color": "#080d14",
+  "theme_color": "#080d14",
   "orientation": "any",
   "lang": "en"
 }

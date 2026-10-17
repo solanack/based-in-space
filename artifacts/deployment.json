@@ -1,0 +1,16 @@
+{
+  "url": "https://based-in-space-preview.vercel.app/",
+  "deploymentId": "dpl_EApEfLN4LcTDy2NvYXr98cjzscFy",
+  "target": "production",
+  "status": "READY",
+  "sourceCommit": "f7719759ee9979c83e62416a8f5549c34af97187",
+  "projectId": "prj_WH3YnGckzQI2DURswCyrszZZ6Fss",
+  "teamId": "team_zgw1By8eYZVT4GmLIlMyDRrl",
+  "runtimeFiles": 17,
+  "runtimeBytes": 831851,
+  "framework": "static ESM / Three.js 0.180.0",
+  "buildDurationMs": 1417,
+  "publicBrowserSmoke": "PASS; arcade intent, forward cruise, nose turn, heading-follow camera, minimal HUD, audio and no resource/page/console errors",
+  "mainMerged": false,
+  "rollbackDeployment": "dpl_CU7Ds8e7hM33kNx6RyP7JGYkqGri"
+}

@@ -1,0 +1,105 @@
+{
+  "runId": "moonfall-2026-10-17-pass2",
+  "captures": [
+    {
+      "name": "live-production",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "path": "artifacts/qa-production/live-production.png",
+      "metrics": {
+        "calls": 49,
+        "triangles": 65018,
+        "geometries": 95,
+        "textures": 4,
+        "dpr": 1,
+        "renderMs": 1.2999999970197678,
+        "frameMs": 383.6612244897959,
+        "camera": "flight",
+        "terrainChunks": 25,
+        "origin": {
+          "x": -0.0,
+          "z": 0
+        },
+        "renderer": "WebGL2",
+        "postPasses": 0,
+        "shadowLights": 1,
+        "entities": 3,
+        "projectiles": 8,
+        "physics": {
+          "engine": "custom swept-sphere",
+          "fixedHz": 60
+        },
+        "audio": {
+          "state": "running",
+          "voices": 1,
+          "muted": false,
+          "playing": true
+        }
+      },
+      "pixelChannelStdDev": [
+        31.351403286574797,
+        27.529515420390872,
+        28.358991777389864
+      ],
+      "entropy": 6.831457355444114,
+      "canvasStdDev": [
+        29.486162770871502,
+        25.620650046191773,
+        26.509770939219436
+      ]
+    }
+  ],
+  "checks": {
+    "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "liveGame": {
+      "phase": "patrol",
+      "position": {
+        "x": -135.8465671787092,
+        "y": 80,
+        "z": 129.09316950387623
+      },
+      "time": 3.4999999999999925,
+      "kills": 0,
+      "base": [
+        {
+          "id": "reactor",
+          "hp": 260
+        },
+        {
+          "id": "comms",
+          "hp": 180
+        },
+        {
+          "id": "hangar",
+          "hp": 220
+        },
+        {
+          "id": "fuel",
+          "hp": 160
+        }
+      ],
+      "metrics": {
+        "calls": 49,
+        "triangles": 65018,
+        "geometries": 95,
+        "textures": 4,
+        "dpr": 1,
+        "renderMs": 1.3999999985098839,
+        "frameMs": 391.81568627450986,
+        "camera": "flight",
+        "terrainChunks": 25,
+        "origin": {
+          "x": -0.0,
+          "z": 0
+        },
+        "renderer": "WebGL2",
+        "postPasses": 0,
+        "shadowLights": 1
+      }
+    }
+  },
+  "errors": [],
+  "resources": []
+}

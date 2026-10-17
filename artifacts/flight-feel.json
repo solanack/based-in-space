@@ -1,0 +1,293 @@
+{
+  "runId": "moonfall-2026-10-17-pass2",
+  "captures": [
+    {
+      "name": "844x390-flight",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "path": "artifacts/qa-flight-feel/844x390-flight.png",
+      "metrics": {
+        "calls": 50,
+        "triangles": 69938,
+        "geometries": 99,
+        "textures": 4,
+        "dpr": 1,
+        "renderMs": 0.900000000372529,
+        "frameMs": 315.8558882235525,
+        "camera": "flight",
+        "terrainChunks": 25,
+        "origin": {
+          "x": -0.0,
+          "z": 0
+        },
+        "renderer": "WebGL2",
+        "postPasses": 0,
+        "shadowLights": 1,
+        "entities": 3,
+        "projectiles": 26,
+        "physics": {
+          "engine": "custom swept-sphere",
+          "fixedHz": 60
+        },
+        "audio": {
+          "state": "running",
+          "voices": 0,
+          "muted": false,
+          "playing": true
+        }
+      },
+      "pixelChannelStdDev": [
+        33.14168420544958,
+        29.080376543767976,
+        30.190422715546788
+      ],
+      "entropy": 6.7550308526171055,
+      "canvasStdDev": [
+        31.29015902094495,
+        27.32877963682668,
+        28.532811363335302
+      ]
+    },
+    {
+      "name": "640x360-flight",
+      "viewport": {
+        "width": 640,
+        "height": 360
+      },
+      "path": "artifacts/qa-flight-feel/640x360-flight.png",
+      "metrics": {
+        "calls": 48,
+        "triangles": 63538,
+        "geometries": 99,
+        "textures": 4,
+        "dpr": 0.85,
+        "renderMs": 1.200000001117587,
+        "frameMs": 297.3957407407405,
+        "camera": "flight",
+        "terrainChunks": 25,
+        "origin": {
+          "x": -0.0,
+          "z": 0
+        },
+        "renderer": "WebGL2",
+        "postPasses": 0,
+        "shadowLights": 1,
+        "entities": 3,
+        "projectiles": 26,
+        "physics": {
+          "engine": "custom swept-sphere",
+          "fixedHz": 60
+        },
+        "audio": {
+          "state": "running",
+          "voices": 0,
+          "muted": false,
+          "playing": true
+        }
+      },
+      "pixelChannelStdDev": [
+        33.647370147793936,
+        29.533190484039448,
+        30.605267092814763
+      ],
+      "entropy": 6.887283649609236,
+      "canvasStdDev": [
+        31.246635350971964,
+        27.277289339643985,
+        28.49792807709532
+      ]
+    },
+    {
+      "name": "932x430-flight",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "path": "artifacts/qa-flight-feel/932x430-flight.png",
+      "metrics": {
+        "calls": 50,
+        "triangles": 69938,
+        "geometries": 99,
+        "textures": 4,
+        "dpr": 0.85,
+        "renderMs": 1.199999999254942,
+        "frameMs": 305.9144444444444,
+        "camera": "flight",
+        "terrainChunks": 25,
+        "origin": {
+          "x": -0.0,
+          "z": 0
+        },
+        "renderer": "WebGL2",
+        "postPasses": 0,
+        "shadowLights": 1,
+        "entities": 3,
+        "projectiles": 26,
+        "physics": {
+          "engine": "custom swept-sphere",
+          "fixedHz": 60
+        },
+        "audio": {
+          "state": "running",
+          "voices": 0,
+          "muted": false,
+          "playing": true
+        }
+      },
+      "pixelChannelStdDev": [
+        32.39723729412491,
+        28.426802777021123,
+        29.551365932747572
+      ],
+      "entropy": 6.723695894913375,
+      "canvasStdDev": [
+        31.272763444944353,
+        27.3124515209259,
+        28.515299415359767
+      ]
+    }
+  ],
+  "checks": {
+    "floatingOriginNoJump": true,
+    "noseTurnsAndPitch": [
+      {
+        "before": {
+          "heading": 0,
+          "y": 80,
+          "z": -129.65046003242833
+        },
+        "after": {
+          "heading": -0.7515421773073843,
+          "y": 80,
+          "z": -86.47644512814833
+        },
+        "intent": {
+          "aimPoint": null,
+          "moveX": 0.7675619834710743,
+          "moveY": 0,
+          "aimX": 0,
+          "aimY": 0,
+          "altitude": 0,
+          "fire": false,
+          "missile": false,
+          "boost": false,
+          "brake": false,
+          "countermeasure": false,
+          "flightMode": "arcade",
+          "turn": 0.7675619834710743,
+          "climb": 0,
+          "assist": true
+        }
+      },
+      {
+        "before": {
+          "heading": -0.7515421773073843,
+          "y": 80,
+          "z": -86.47644512814833
+        },
+        "after": {
+          "heading": 1.3877787807814457e-17,
+          "y": 80,
+          "z": -45.9086435676149
+        },
+        "intent": {
+          "aimPoint": null,
+          "moveX": -0.7675619834710743,
+          "moveY": 0,
+          "aimX": 0,
+          "aimY": 0,
+          "altitude": 0,
+          "fire": false,
+          "missile": false,
+          "boost": false,
+          "brake": false,
+          "countermeasure": false,
+          "flightMode": "arcade",
+          "turn": -0.7675619834710743,
+          "climb": 0,
+          "assist": true
+        }
+      },
+      {
+        "before": {
+          "heading": 1.3877787807814457e-17,
+          "y": 80,
+          "z": -45.9086435676149
+        },
+        "after": {
+          "heading": 1.3877787807814457e-17,
+          "y": 92.65414611796659,
+          "z": -2.4973220577436797
+        },
+        "intent": {
+          "aimPoint": null,
+          "moveX": 0,
+          "moveY": 0.7675619834710743,
+          "aimX": 0,
+          "aimY": 0,
+          "altitude": 0.5756714876033058,
+          "fire": false,
+          "missile": false,
+          "boost": false,
+          "brake": false,
+          "countermeasure": false,
+          "flightMode": "arcade",
+          "turn": 0,
+          "climb": 0.7675619834710743,
+          "assist": true
+        }
+      },
+      {
+        "before": {
+          "heading": 1.3877787807814457e-17,
+          "y": 92.65414611796659,
+          "z": -2.4973220577436797
+        },
+        "after": {
+          "heading": 1.3877787807814457e-17,
+          "y": 87.10240207614895,
+          "z": 40.79842946077414
+        },
+        "intent": {
+          "aimPoint": null,
+          "moveX": 0,
+          "moveY": -0.7675619834710743,
+          "aimX": 0,
+          "aimY": 0,
+          "altitude": -0.5756714876033058,
+          "fire": false,
+          "missile": false,
+          "boost": false,
+          "brake": false,
+          "countermeasure": false,
+          "flightMode": "arcade",
+          "turn": 0,
+          "climb": -0.7675619834710743,
+          "assist": true
+        }
+      }
+    ],
+    "twoThumbCombat": {
+      "aimPoint": null,
+      "moveX": 0.5867768595041323,
+      "moveY": 0.3285123966942149,
+      "aimX": 0,
+      "aimY": 0,
+      "altitude": 0.24638429752066116,
+      "fire": true,
+      "missile": false,
+      "boost": true,
+      "brake": false,
+      "countermeasure": false,
+      "flightMode": "arcade",
+      "turn": 0.5867768595041323,
+      "climb": 0.3285123966942149,
+      "assist": true
+    },
+    "pauseClearsControls": true
+  },
+  "errors": [],
+  "resources": []
+}

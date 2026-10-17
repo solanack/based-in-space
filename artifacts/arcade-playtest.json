@@ -1,0 +1,29 @@
+{
+  "method": "Normal flight-mode intents only; no entity/time/health mutation; outcomes include losses",
+  "results": [
+    {
+      "brakeAngle": 1,
+      "phase": "debrief",
+      "time": 79.44999999999678,
+      "hp": 14.833333333333044,
+      "kills": 13,
+      "score": 5622
+    },
+    {
+      "brakeAngle": 1.2,
+      "phase": "debrief",
+      "time": 79.44999999999678,
+      "hp": 49.83333333333306,
+      "kills": 14,
+      "score": 5736
+    },
+    {
+      "brakeAngle": 1.4,
+      "phase": "failed",
+      "time": 77.11666666666358,
+      "hp": 0,
+      "kills": 15,
+      "score": 3750
+    }
+  ]
+}
