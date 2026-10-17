@@ -19,6 +19,8 @@ Open http://localhost:5188 in landscape. `npm run dev` serves source directly. T
 
 ## Controls
 
+Arcade flight is the default: the ship cruises forward, the floating stick turns/pitches, and release returns to level flight. Hover remains available in paused flight settings.
+
 - Touch: floating left stick turns the nose and controls climb/dive; forward cruise is automatic; FIRE, BOOST, BRAKE and countermeasure icons; hold MISSILE to lock, release to launch. Slide upward while holding FIRE to boost with two thumbs.
 - Keyboard: A/D or left/right turn, W/S or up/down climb/dive, Space fire, Shift boost, Control brake, M hold/release missile, X countermeasure, Escape pause.
 - Mouse: aim at world position and left button fire. Gamepad: left stick turns and pitches, triggers operate weapons, A boost, B brake, X flare.

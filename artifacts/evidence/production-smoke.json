@@ -9,45 +9,45 @@
       },
       "path": "artifacts/qa-production/live-production.png",
       "metrics": {
-        "calls": 73,
-        "triangles": 48054,
-        "geometries": 85,
+        "calls": 49,
+        "triangles": 65018,
+        "geometries": 95,
         "textures": 4,
         "dpr": 1,
-        "renderMs": 1.099999999627471,
-        "frameMs": 367.3585531914894,
-        "camera": "close",
+        "renderMs": 1.2999999970197678,
+        "frameMs": 383.6612244897959,
+        "camera": "flight",
         "terrainChunks": 25,
         "origin": {
           "x": -0.0,
-          "z": -0.0
+          "z": 0
         },
         "renderer": "WebGL2",
         "postPasses": 0,
         "shadowLights": 1,
         "entities": 3,
-        "projectiles": 11,
+        "projectiles": 8,
         "physics": {
           "engine": "custom swept-sphere",
           "fixedHz": 60
         },
         "audio": {
           "state": "running",
-          "voices": 0,
+          "voices": 1,
           "muted": false,
           "playing": true
         }
       },
       "pixelChannelStdDev": [
-        28.854329259321297,
-        25.758931053325355,
-        26.597111151618194
+        31.351403286574797,
+        27.529515420390872,
+        28.358991777389864
       ],
-      "entropy": 7.071600834515124,
+      "entropy": 6.831457355444114,
       "canvasStdDev": [
-        26.879267621888953,
-        23.653215241245213,
-        24.560668414930763
+        29.486162770871502,
+        25.620650046191773,
+        26.509770939219436
       ]
     }
   ],
@@ -56,11 +56,11 @@
     "liveGame": {
       "phase": "patrol",
       "position": {
-        "x": -57.39746249850127,
+        "x": -135.8465671787092,
         "y": 80,
-        "z": -191.12422829288172
+        "z": 129.09316950387623
       },
-      "time": 3.299999999999993,
+      "time": 3.4999999999999925,
       "kills": 0,
       "base": [
         {
@@ -81,18 +81,18 @@
         }
       ],
       "metrics": {
-        "calls": 73,
-        "triangles": 48054,
-        "geometries": 85,
+        "calls": 49,
+        "triangles": 65018,
+        "geometries": 95,
         "textures": 4,
         "dpr": 1,
-        "renderMs": 1,
-        "frameMs": 370.39085714285716,
-        "camera": "close",
+        "renderMs": 1.3999999985098839,
+        "frameMs": 391.81568627450986,
+        "camera": "flight",
         "terrainChunks": 25,
         "origin": {
           "x": -0.0,
-          "z": -0.0
+          "z": 0
         },
         "renderer": "WebGL2",
         "postPasses": 0,
