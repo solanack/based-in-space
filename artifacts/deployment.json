@@ -1,16 +1,16 @@
 {
   "url": "https://based-in-space-preview.vercel.app/",
-  "deploymentId": "dpl_B1FGnDEcrjbnfChf6RpzvsYMJwX8",
+  "deploymentId": "dpl_CU7Ds8e7hM33kNx6RyP7JGYkqGri",
   "target": "production",
   "status": "READY",
-  "sourceCommit": "c33a752735cebd36ae20dc928d51d76508288803",
+  "sourceCommit": "d200bf8eaeb666a3fc616401d1b1b8839d154391",
   "projectId": "prj_WH3YnGckzQI2DURswCyrszZZ6Fss",
   "teamId": "team_zgw1By8eYZVT4GmLIlMyDRrl",
-  "runtimeFiles": 15,
-  "runtimeBytes": 824254,
+  "runtimeFiles": 16,
+  "runtimeBytes": 827772,
   "framework": "static ESM / Three.js 0.180.0",
-  "buildDurationMs": 1966,
-  "publicBrowserSmoke": "PASS; no console/page/resource errors; movement/fire/audio active",
+  "buildDurationMs": 1407,
+  "publicBrowserSmoke": "PASS; close camera, corrected screen-right movement, no ALT buttons, minimal HUD, pause upper-right; zero console/page/resource errors",
   "mainMerged": false,
-  "rollbackDeployment": "dpl_9YaqPgeJR7NeNmhMCtCRgSiLyi1e"
+  "rollbackDeployment": "dpl_B1FGnDEcrjbnfChf6RpzvsYMJwX8"
 }

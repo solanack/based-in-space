@@ -9,24 +9,24 @@
       },
       "path": "artifacts/qa-production/live-production.png",
       "metrics": {
-        "calls": 80,
-        "triangles": 53538,
-        "geometries": 86,
+        "calls": 73,
+        "triangles": 48054,
+        "geometries": 85,
         "textures": 4,
         "dpr": 1,
-        "renderMs": 1.1000000014901161,
-        "frameMs": 347.905,
-        "camera": "tactical",
+        "renderMs": 1.099999999627471,
+        "frameMs": 367.3585531914894,
+        "camera": "close",
         "terrainChunks": 25,
         "origin": {
-          "x": 0,
+          "x": -0.0,
           "z": -0.0
         },
         "renderer": "WebGL2",
         "postPasses": 0,
         "shadowLights": 1,
         "entities": 3,
-        "projectiles": 10,
+        "projectiles": 11,
         "physics": {
           "engine": "custom swept-sphere",
           "fixedHz": 60
@@ -39,15 +39,15 @@
         }
       },
       "pixelChannelStdDev": [
-        36.0845150062154,
-        32.5615000157856,
-        33.400260093713946
+        28.854329259321297,
+        25.758931053325355,
+        26.597111151618194
       ],
-      "entropy": 7.059304229117974,
+      "entropy": 7.071600834515124,
       "canvasStdDev": [
-        31.792435718301924,
-        27.822715486766047,
-        29.021768467492656
+        26.879267621888953,
+        23.653215241245213,
+        24.560668414930763
       ]
     }
   ],
@@ -56,11 +56,11 @@
     "liveGame": {
       "phase": "patrol",
       "position": {
-        "x": 57.41726497679701,
+        "x": -57.39746249850127,
         "y": 80,
-        "z": -190
+        "z": -191.12422829288172
       },
-      "time": 2.5999999999999956,
+      "time": 3.299999999999993,
       "kills": 0,
       "base": [
         {
@@ -81,17 +81,17 @@
         }
       ],
       "metrics": {
-        "calls": 80,
-        "triangles": 53538,
-        "geometries": 86,
+        "calls": 73,
+        "triangles": 48054,
+        "geometries": 85,
         "textures": 4,
         "dpr": 1,
-        "renderMs": 1.5,
-        "frameMs": 350.3833333333333,
-        "camera": "tactical",
+        "renderMs": 1,
+        "frameMs": 370.39085714285716,
+        "camera": "close",
         "terrainChunks": 25,
         "origin": {
-          "x": 0,
+          "x": -0.0,
           "z": -0.0
         },
         "renderer": "WebGL2",

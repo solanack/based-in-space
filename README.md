@@ -1,5 +1,7 @@
 # BASED IN SPACE — MOONFALL
 
+[Play the current build](https://based-in-space-preview.vercel.app/)
+
 Work-in-progress lunar defense slice: the owned glossy black/red/white RAZOR, free 3D flight, twin cannons, lock-on missiles, three hostile roles, and a destructible outpost siege. This feature branch replaces an incomplete archived ten-sector scaffold. It is not yet a verified mobile release.
 
 ## Run locally
