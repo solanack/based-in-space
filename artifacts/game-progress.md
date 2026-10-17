@@ -14,3 +14,6 @@ One static ESM application, one WebGL2 renderer, one60Hz simulation, no runtime 
 
 ## Current work
 Source recovered; feature branch created. Simulation, tests, mobile input/HUD, terrain chunks, model adaptation, base kit and audio underway. See final-evidence.md for measured status after integration. Physical Android bridge unavailable; real device/tactile/thermal gates remain pending. No premium/mobile-ready claim without evidence.
+
+## Browser checkpoint
+Elevated local socket execution resolved the sandbox blocker. Chromium integration and resource checks now pass in focused passes;19unit tests and three normal-input siege bot completions pass. Evidence and residual gaps are in final-evidence.md. Fixed missing favicon requests, too-small hero camera framing, shared material disposal, stale debrief state, two-thumb boost, visible missile warnings and reflection rebuild on graphics restore. User explicitly authorized production deployment with “Finish and deploy”; use existing Vercel project based-in-space-preview (prj_WH3YnGckzQI2DURswCyrszZZ6Fss), team_zgw1By8eYZVT4GmLIlMyDRrl. Prior production rollback candidate dpl_9YaqPgeJR7NeNmhMCtCRgSiLyi1e. No merge authorized or needed.

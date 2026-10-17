@@ -1,0 +1,86 @@
+{
+  "method": "fixed60Hz normal intents; three deterministic steering policies; no cheats",
+  "results": [
+    {
+      "mode": 0,
+      "phase": "debrief",
+      "time": 81.21666666666334,
+      "hp": 60,
+      "kills": 21,
+      "score": 7002,
+      "credits": 700,
+      "base": [
+        {
+          "id": "reactor",
+          "hp": 260
+        },
+        {
+          "id": "comms",
+          "hp": 144
+        },
+        {
+          "id": "hangar",
+          "hp": 220
+        },
+        {
+          "id": "fuel",
+          "hp": 160
+        }
+      ]
+    },
+    {
+      "mode": 1,
+      "phase": "debrief",
+      "time": 81.43333333333,
+      "hp": 88.33333333333327,
+      "kills": 21,
+      "score": 6930,
+      "credits": 693,
+      "base": [
+        {
+          "id": "reactor",
+          "hp": 260
+        },
+        {
+          "id": "comms",
+          "hp": 180
+        },
+        {
+          "id": "hangar",
+          "hp": 172
+        },
+        {
+          "id": "fuel",
+          "hp": 148
+        }
+      ]
+    },
+    {
+      "mode": 2,
+      "phase": "debrief",
+      "time": 81.19999999999668,
+      "hp": 20,
+      "kills": 21,
+      "score": 6966,
+      "credits": 696,
+      "base": [
+        {
+          "id": "reactor",
+          "hp": 248
+        },
+        {
+          "id": "comms",
+          "hp": 156
+        },
+        {
+          "id": "hangar",
+          "hp": 220
+        },
+        {
+          "id": "fuel",
+          "hp": 148
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@
     "check": "node --experimental-vm-modules scripts/check.mjs",
     "build": "node --experimental-vm-modules scripts/build.mjs",
     "preview": "python3 -m http.server 5188 --bind 0.0.0.0 --directory dist",
-    "qa": "python3 tests/browser_qa.py"
+    "qa": "python3 tests/browser_qa.py",
+    "test:bot": "node tests/bot-playtest.mjs"
   }
 }

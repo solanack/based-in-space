@@ -66,21 +66,21 @@ export class MoonRenderer{
   constructor(canvas,game,settings={}){
     this.canvas=canvas;this.settings=settings;this.mode='tactical';this.frames=[];this.tiles=new Map();this.enemyModels=new Map();this.baseModels=new Map();this.frameMs=16.7;this.dpr=1;this.quality='auto';this.origin=V();this.lastEvent=0;this.lastAdapt=0;
     this.renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-    this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.25;
+    this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.1;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;
     this.scene=new T.Scene();this.scene.background=new T.Color(0x04060a);
     this.world=new T.Group();this.scene.add(this.world);
     this.camera=new T.PerspectiveCamera(55,1,1,6000);this.camera.position.set(0,190,-340);this.target=V(0,30,0);
     this.scene.add(new T.HemisphereLight(0xc3d2e7,0x32303a,2.1));
-    const sun=new T.DirectionalLight(0xffe7ce,3.4);sun.position.set(-400,700,300);this.scene.add(sun);
+    const sun=new T.DirectionalLight(0xffe7ce,3.4);sun.position.set(-400,700,300);sun.castShadow=true;sun.shadow.mapSize.set(512,512);Object.assign(sun.shadow.camera,{left:-240,right:240,top:240,bottom:-240,near:1,far:1600});sun.shadow.camera.updateProjectionMatrix();sun.shadow.bias=-.0008;this.sun=sun;this.scene.add(sun,sun.target);
     const rim=new T.DirectionalLight(0x87b4ff,1.1);rim.position.set(300,140,-500);this.scene.add(rim);
     // Single startup studio IBL bake; no external texture or heavyweight second context.
     const env=new T.Scene();env.background=new T.Color(0x202734);
     for(const [x,y,z,w,h,c] of [[-20,15,5,12,30,0xffeee4],[15,10,-10,8,25,0xc5dbff],[0,30,0,30,20,0xffffff]]){const p=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({color:c,side:T.DoubleSide}));p.position.set(x,y,z);p.lookAt(0,0,0);env.add(p);}
-    const pmrem=new T.PMREMGenerator(this.renderer);this.envTarget=pmrem.fromScene(env,.1,.1,100);this.scene.environment=this.envTarget.texture;this.scene.environmentIntensity=.85;pmrem.dispose();disposeTree(env);
+    const pmrem=new T.PMREMGenerator(this.renderer);this.envTarget=pmrem.fromScene(env,.1,.1,100);this.scene.environment=this.envTarget.texture;this.scene.environmentIntensity=.85;pmrem.dispose();this.environmentScene=env;
     this.kit={armor:material(0x383e48,.6,.46),dark:material(0x11161e,.45,.7),steel:material(0xa3abb5,.72,.3),red:material(0xb82030,.55,.4),engine:new T.MeshBasicMaterial({color:0xff705a}),beacon:new T.MeshBasicMaterial({color:0x92e0ee})};
     this.hero=createRazor(T);this.hero.scale.setScalar(3.2);this.world.add(this.hero);
     this.flames=[];for(const socket of this.hero.userData.thrusterPositions){const f=new T.Mesh(new T.ConeGeometry(.19,1.7,10),new T.MeshBasicMaterial({color:0xbceaff,transparent:true,opacity:.75,depthWrite:false}));f.rotation.x=-Math.PI/2;f.position.set(socket[0],socket[1],socket[2]-.75);this.hero.add(f);this.flames.push(f);}
-    this.terrainMaterial=new T.MeshStandardMaterial({color:0x969399,roughness:1,metalness:.08,vertexColors:true});
+    this.terrainMaterial=new T.MeshStandardMaterial({color:0x66636b,roughness:1,metalness:.08,vertexColors:true});
     // One shared procedural regolith map: fine grain and small crater stippling.
     const texCanvas=document.createElement('canvas');texCanvas.width=texCanvas.height=128;const ctx=texCanvas.getContext('2d'),img=ctx.createImageData(128,128);let seed=113;
     for(let i=0;i<img.data.length;i+=4){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const c=100+(seed>>>26);img.data[i]=c;img.data[i+1]=c;img.data[i+2]=c;img.data[i+3]=255;}ctx.putImageData(img,0,0);this.regolith=new T.CanvasTexture(texCanvas);this.regolith.wrapS=this.regolith.wrapT=T.RepeatWrapping;this.regolith.repeat.set(16,16);this.terrainMaterial.map=this.regolith;
@@ -95,16 +95,16 @@ export class MoonRenderer{
     this.updateTerrain(game.player.position);this.disposed=false;
   }
   addStars(){const data=[];let seed=51;const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};for(let i=0;i<650;i++){const a=rand()*Math.PI*2,y=rand()*.9+.1,r=Math.sqrt(1-y*y);data.push(Math.sin(a)*r*4200,y*4200,Math.cos(a)*r*4200);}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(data,3));this.stars=new T.Points(g,new T.PointsMaterial({color:0xadb9cc,size:2.1,sizeAttenuation:false}));this.scene.add(this.stars);}
-  addEarth(){const c=document.createElement('canvas');c.width=256;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='#143655';ctx.fillRect(0,0,256,128);for(let i=0;i<45;i++){ctx.fillStyle=i%4?'#427477':'#c8cfc7';ctx.beginPath();const x=(Math.sin(i*13.2)*.5+.5)*256,y=(Math.cos(i*3.8)*.5+.5)*128;ctx.ellipse(x,y,8+i%13,3+i%9,i,0,7);ctx.fill();}const texture=new T.CanvasTexture(c);texture.colorSpace=T.SRGBColorSpace;this.earth=new T.Mesh(new T.SphereGeometry(135,40,24),new T.MeshStandardMaterial({map:texture,roughness:.9,emissive:0x0c1827,emissiveIntensity:.4}));this.earth.position.set(-1250,1000,3100);this.earth.rotation.z=.3;this.scene.add(this.earth);}
+  addEarth(){const c=document.createElement('canvas');c.width=256;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='#143655';ctx.fillRect(0,0,256,128);for(let i=0;i<45;i++){ctx.fillStyle=i%4?'#427477':'#c8cfc7';ctx.beginPath();const x=(Math.sin(i*13.2)*.5+.5)*256,y=(Math.cos(i*3.8)*.5+.5)*128;ctx.ellipse(x,y,8+i%13,3+i%9,i,0,7);ctx.fill();}const texture=new T.CanvasTexture(c);texture.colorSpace=T.SRGBColorSpace;this.earth=new T.Mesh(new T.SphereGeometry(135,40,24),new T.MeshStandardMaterial({map:texture,roughness:.9,emissive:0x0c1827,emissiveIntensity:.4}));this.earth.position.set(-1100,120,3100);this.earth.rotation.z=.3;this.scene.add(this.earth);}
   addRoads(base){const root=new T.Group();for(const b of base){const len=Math.hypot(b.position.x,b.position.z);if(len<10)continue;const road=box(root,this.kit.dark,b.position.x/2,.6,b.position.z/2,7,.2,len);road.rotation.y=Math.atan2(b.position.x,b.position.z);for(let i=0;i<8;i++){const t=i/8;box(root,this.kit.steel,b.position.x*t,1,b.position.z*t,1,.2,2);}}batch(root);this.world.add(root);}
   resize(){const w=this.canvas.clientWidth||innerWidth,h=this.canvas.clientHeight||innerHeight;const quality=this.settings.quality||'auto';this.dpr=quality==='low'?.75:quality==='high'?Math.min(devicePixelRatio,1.5):this.dpr;this.renderer.setPixelRatio(this.dpr);this.renderer.setSize(w,h,false);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();}
   setCamera(){this.mode=this.mode==='tactical'?'chase':'tactical';return this.mode;}
   updateTerrain(p){const cx=Math.floor(p.x/512),cz=Math.floor(p.z/512),key=`${cx},${cz}`;if(this.rockCenter===key)return;this.rockCenter=key;
-    const wanted=new Set();for(let x=cx-2;x<=cx+2;x++)for(let z=cz-2;z<=cz+2;z++){const k=`${x},${z}`;wanted.add(k);if(this.tiles.has(k))continue;const g=new T.PlaneGeometry(512,512,28,28);g.rotateX(-Math.PI/2);const pos=g.attributes.position,col=[];for(let i=0;i<pos.count;i++){const wx=pos.getX(i)+x*512,wz=pos.getZ(i)+z*512,y=terrainHeight(wx,wz);pos.setY(i,y);const a=.58+.18*Math.sin(wx*.04)*Math.cos(wz*.035)+.2*clamp(y/70,0,1);col.push(a,a*.98,a*1.01);}g.setAttribute('color',new T.Float32BufferAttribute(col,3));g.computeVertexNormals();const m=new T.Mesh(g,this.terrainMaterial);m.position.set(x*512,0,z*512);this.tiles.set(k,m);this.world.add(m);}
+    const wanted=new Set();for(let x=cx-2;x<=cx+2;x++)for(let z=cz-2;z<=cz+2;z++){const k=`${x},${z}`;wanted.add(k);if(this.tiles.has(k))continue;const g=new T.PlaneGeometry(512,512,40,40);g.rotateX(-Math.PI/2);const pos=g.attributes.position,col=[];for(let i=0;i<pos.count;i++){const wx=pos.getX(i)+x*512,wz=pos.getZ(i)+z*512,y=terrainHeight(wx,wz);pos.setY(i,y);const a=.58+.18*Math.sin(wx*.04)*Math.cos(wz*.035)+.2*clamp(y/70,0,1);col.push(a,a*.98,a*1.01);}g.setAttribute('color',new T.Float32BufferAttribute(col,3));g.computeVertexNormals();const m=new T.Mesh(g,this.terrainMaterial);m.receiveShadow=true;m.position.set(x*512,0,z*512);this.tiles.set(k,m);this.world.add(m);}
     for(const [k,m] of this.tiles)if(!wanted.has(k)){this.world.remove(m);m.geometry.dispose();this.tiles.delete(k);}
     for(let i=0;i<180;i++){const x=cx*512+Math.sin(i*417.23)*1150,z=cz*512+Math.cos(i*233.19)*1150;dummy.position.set(x,terrainHeight(x,z),z);dummy.rotation.set(i*.7,i,0);dummy.scale.set(2+i%6,1+i%5,2+i%4);dummy.updateMatrix();this.rocks.setMatrixAt(i,dummy.matrix);}this.rocks.instanceMatrix.needsUpdate=true;
   }
-  frame(g,dt,alpha,input={}){
+  frame(g,dt,alpha,input={},rawDt=dt){
     if(this.disposed)return;const before=performance.now(),p=g.player,prev=p.previous||p.position;
     const position=V().lerpVectors(V(prev.x,prev.y,prev.z),V(p.position.x,p.position.y,p.position.z),alpha);
     this.origin.set(Math.round(position.x/2048)*2048,0,Math.round(position.z/2048)*2048);this.world.position.copy(this.origin).negate();
@@ -120,19 +120,20 @@ export class MoonRenderer{
     let sparks=0,rings=0;for(const effect of g.effects||[]){if(rings>=32)break;const age=1-effect.life/(effect.maxLife||1),r=(effect.kind==='explosion'?24:7)*age+1;dummy.position.set(effect.position.x,effect.position.y,effect.position.z);dummy.rotation.set(Math.PI/2,0,0);dummy.scale.setScalar(r);dummy.updateMatrix();this.rings.setMatrixAt(rings++,dummy.matrix);for(let i=0;i<8&&sparks<240;i++){const a=i*2.4+(effect.id||0),dist=r*(1+i%3);dummy.position.set(effect.position.x+Math.sin(a)*dist,effect.position.y+Math.sin(i*4)*dist*.5,effect.position.z+Math.cos(a)*dist);dummy.rotation.set(a,age*8,a);dummy.scale.setScalar(Math.max(.2,(1-age)*(effect.kind==='explosion'?2.5:.9)));dummy.updateMatrix();this.sparks.setMatrixAt(sparks++,dummy.matrix);}}
     this.sparks.count=sparks;this.rings.count=this.settings.reducedFlash?0:rings;this.sparks.instanceMatrix.needsUpdate=true;this.rings.instanceMatrix.needsUpdate=true;
     const speed=Math.hypot(p.velocity.x,p.velocity.y,p.velocity.z),chase=this.mode==='chase';
-    const offset=chase?V(-Math.sin(p.heading)*65,42,-Math.cos(p.heading)*65):V(0,155,-155);
+    const offset=chase?V(-Math.sin(p.heading)*65,42,-Math.cos(p.heading)*65):V(0,82,-115);
     const desired=position.clone().sub(this.origin).add(offset);desired.y=Math.max(desired.y,terrainHeight(desired.x+this.origin.x,desired.z+this.origin.z)+22);
     this.camera.position.lerp(desired,1-Math.exp(-dt*(this.settings.reducedMotion?10:5)));
-    const look=position.clone().sub(this.origin).add(chase?V(Math.sin(p.heading)*38,0,Math.cos(p.heading)*38):V(0,0,38));
+    const look=position.clone().sub(this.origin).add(chase?V(Math.sin(p.heading)*38,0,Math.cos(p.heading)*38):V(0,0,55));
     this.target.lerp(look,1-Math.exp(-dt*8));this.camera.lookAt(this.target);
     const fov=chase?58+clamp(speed/350,0,1)*10:55;this.camera.fov+= (fov-this.camera.fov)*(1-Math.exp(-dt*3));this.camera.updateProjectionMatrix();
-    this.renderer.render(this.scene,this.camera);this.frameMs=performance.now()-before;
-    this.frames.push(dt*1000);if(this.frames.length>180)this.frames.shift();
+    this.sun.target.position.copy(position).sub(this.origin);this.sun.position.copy(this.sun.target.position).add(V(-400,700,300));this.renderer.render(this.scene,this.camera);this.frameMs=performance.now()-before;
+    this.frames.push(rawDt*1000);if(this.frames.length>180)this.frames.shift();
     // Deliberately slow adaptation prevents resolution pumping on one missed frame.
     if(this.settings.quality==='auto'&&this.frames.length===180&&g.time-this.lastAdapt>3){const avg=this.frames.reduce((a,b)=>a+b,0)/180;const next=clamp(this.dpr+(avg>30?-.15:avg<19?.05:0),.65,1.25);if(next!==this.dpr){this.dpr=next;this.resize();}this.lastAdapt=g.time;}
   }
+  restoreEnvironment(){this.envTarget.dispose();const pmrem=new T.PMREMGenerator(this.renderer);this.envTarget=pmrem.fromScene(this.environmentScene,.1,.1,100);this.scene.environment=this.envTarget.texture;pmrem.dispose();}
   aimAt(x,y,player){const ndc=new T.Vector2(x/innerWidth*2-1,1-y/innerHeight*2),ray=new T.Raycaster();ray.setFromCamera(ndc,this.camera);const plane=new T.Plane(up,-player.position.y),hit=V();if(!ray.ray.intersectPlane(plane,hit))return null;hit.add(this.origin).sub(V(player.position.x,player.position.y,player.position.z));hit.normalize();return {aimX:hit.x,aimY:hit.z};}
   project(pos){const v=V(pos.x,pos.y,pos.z).sub(this.origin).project(this.camera);return {x:(v.x+1)*innerWidth/2,y:(1-v.y)*innerHeight/2,visible:v.z<1&&Math.abs(v.x)<1&&Math.abs(v.y)<1};}
-  metrics(){const r=this.renderer.info;return {calls:r.render.calls,triangles:r.render.triangles,geometries:r.memory.geometries,textures:r.memory.textures,dpr:this.dpr,renderMs:this.frameMs,frameMs:this.frames.length?this.frames.reduce((a,b)=>a+b,0)/this.frames.length:0,camera:this.mode,terrainChunks:this.tiles.size,origin:{x:this.origin.x,z:this.origin.z},renderer:'WebGL2',postPasses:0,shadowLights:0};}
-  dispose(){this.disposed=true;window.removeEventListener('resize',this.handleResize);window.visualViewport?.removeEventListener('resize',this.handleResize);disposeTree(this.scene);this.regolith.dispose();this.envTarget.dispose();this.renderer.dispose();}
+  metrics(){const r=this.renderer.info;return {calls:r.render.calls,triangles:r.render.triangles,geometries:r.memory.geometries,textures:r.memory.textures,dpr:this.dpr,renderMs:this.frameMs,frameMs:this.frames.length?this.frames.reduce((a,b)=>a+b,0)/this.frames.length:0,camera:this.mode,terrainChunks:this.tiles.size,origin:{x:this.origin.x,z:this.origin.z},renderer:'WebGL2',postPasses:0,shadowLights:1};}
+  dispose(){this.disposed=true;window.removeEventListener('resize',this.handleResize);window.visualViewport?.removeEventListener('resize',this.handleResize);disposeTree(this.scene);this.regolith.dispose();disposeTree(this.environmentScene);this.envTarget.dispose();this.renderer.dispose();}
 }

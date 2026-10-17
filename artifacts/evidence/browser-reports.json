@@ -1,0 +1,925 @@
+{
+  "qa-2026-10-17": {
+    "runId": "moonfall-2026-10-17-pass2",
+    "captures": [
+      {
+        "name": "844x390-active-play",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "path": "artifacts/qa-2026-10-17/844x390-active-play.png",
+        "metrics": {
+          "calls": 67,
+          "triangles": 47304,
+          "geometries": 84,
+          "textures": 3,
+          "dpr": 1,
+          "renderMs": 1.300000000745058,
+          "frameMs": 95.34883720930233,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 26,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 2,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          39.44493687501859,
+          33.713461251199874,
+          34.56342717154116
+        ],
+        "entropy": 6.978022863269666
+      },
+      {
+        "name": "844x390-after-flight",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "path": "artifacts/qa-2026-10-17/844x390-after-flight.png",
+        "metrics": {
+          "calls": 44,
+          "triangles": 53544,
+          "geometries": 97,
+          "textures": 3,
+          "dpr": 0.85,
+          "renderMs": 0.7999999988824129,
+          "frameMs": 98.88888888888889,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": 2048
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 6,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          38.39515418569723,
+          34.5942452117662,
+          35.5734313224447
+        ],
+        "entropy": 6.708527518269462
+      },
+      {
+        "name": "640x360-active-play",
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "path": "artifacts/qa-2026-10-17/640x360-active-play.png",
+        "metrics": {
+          "calls": 78,
+          "triangles": 51498,
+          "geometries": 88,
+          "textures": 3,
+          "dpr": 0.7,
+          "renderMs": 0.900000000372529,
+          "frameMs": 97.87037037037038,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 0,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          37.95382316147643,
+          34.77461007237312,
+          35.5127776482104
+        ],
+        "entropy": 7.191318563585117
+      },
+      {
+        "name": "932x430-active-play",
+        "viewport": {
+          "width": 932,
+          "height": 430
+        },
+        "path": "artifacts/qa-2026-10-17/932x430-active-play.png",
+        "metrics": {
+          "calls": 78,
+          "triangles": 51498,
+          "geometries": 88,
+          "textures": 3,
+          "dpr": 0.7,
+          "renderMs": 1.099999999627471,
+          "frameMs": 96.85185185185185,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 0,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          34.767650558095454,
+          31.39462873250125,
+          32.27205701795102
+        ],
+        "entropy": 6.997432947737283
+      },
+      {
+        "name": "1440x900-active-play",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "path": "artifacts/qa-2026-10-17/1440x900-active-play.png",
+        "metrics": {
+          "calls": 78,
+          "triangles": 51498,
+          "geometries": 88,
+          "textures": 3,
+          "dpr": 0.7,
+          "renderMs": 0.900000000372529,
+          "frameMs": 95.83333333333333,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 0,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          32.9629686279988,
+          29.341496011234266,
+          30.32730201148889
+        ],
+        "entropy": 6.816766954090409
+      },
+      {
+        "name": "844x390-siege",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "path": "artifacts/qa-2026-10-17/844x390-siege.png",
+        "metrics": {
+          "calls": 89,
+          "triangles": 52586,
+          "geometries": 98,
+          "textures": 3,
+          "dpr": 0.65,
+          "renderMs": 1.099999999627471,
+          "frameMs": 94.8148148148148,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 8,
+          "projectiles": 4,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          36.24456413851923,
+          32.37528304438286,
+          33.12052291761506
+        ],
+        "entropy": 7.093194504545155
+      }
+    ],
+    "checks": {
+      "multitouch": {
+        "aimPoint": null,
+        "moveX": 0.8408532499441589,
+        "moveY": 0.2824436006254188,
+        "aimX": 0,
+        "aimY": 0,
+        "altitude": 0,
+        "fire": true,
+        "missile": false,
+        "boost": true,
+        "brake": false,
+        "countermeasure": false
+      },
+      "release": {
+        "aimPoint": null,
+        "moveX": 0,
+        "moveY": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "altitude": 0,
+        "fire": false,
+        "missile": false,
+        "boost": false,
+        "brake": false,
+        "countermeasure": false
+      },
+      "audio": {
+        "state": "running",
+        "voices": 0,
+        "muted": false,
+        "playing": true
+      },
+      "pause": true,
+      "motionSeconds": 33.11487075399964,
+      "travel": {
+        "start": {
+          "phase": "patrol",
+          "position": {
+            "x": 0,
+            "y": 80,
+            "z": -190
+          },
+          "time": 0.8000000000000008,
+          "kills": 0,
+          "base": [
+            {
+              "id": "reactor",
+              "hp": 260
+            },
+            {
+              "id": "comms",
+              "hp": 180
+            },
+            {
+              "id": "hangar",
+              "hp": 220
+            },
+            {
+              "id": "fuel",
+              "hp": 160
+            }
+          ],
+          "metrics": {
+            "calls": 78,
+            "triangles": 51498,
+            "geometries": 82,
+            "textures": 3,
+            "dpr": 1,
+            "renderMs": 1.200000001117587,
+            "frameMs": 91.66666666666667,
+            "camera": "tactical",
+            "terrainChunks": 25,
+            "origin": {
+              "x": 0,
+              "z": -0.0
+            },
+            "renderer": "WebGL2",
+            "postPasses": 0,
+            "shadowLights": 1
+          }
+        },
+        "end": {
+          "phase": "intercept",
+          "position": {
+            "x": 483.2033744995687,
+            "y": 203.49999948395978,
+            "z": 1320.8989859942094
+          },
+          "time": 17.900000000000265,
+          "kills": 0,
+          "base": [
+            {
+              "id": "reactor",
+              "hp": 260
+            },
+            {
+              "id": "comms",
+              "hp": 180
+            },
+            {
+              "id": "hangar",
+              "hp": 220
+            },
+            {
+              "id": "fuel",
+              "hp": 160
+            }
+          ],
+          "metrics": {
+            "calls": 44,
+            "triangles": 53524,
+            "geometries": 97,
+            "textures": 3,
+            "dpr": 0.85,
+            "renderMs": 0.8000000007450581,
+            "frameMs": 98.88888888888889,
+            "camera": "tactical",
+            "terrainChunks": 25,
+            "origin": {
+              "x": 0,
+              "z": 2048
+            },
+            "renderer": "WebGL2",
+            "postPasses": 0,
+            "shadowLights": 1
+          }
+        }
+      },
+      "mute": true,
+      "layout-640x360": [],
+      "layout-932x430": [],
+      "layout-1440x900": [],
+      "retry": true
+    },
+    "errors": [],
+    "resources": []
+  },
+  "qa-final": {
+    "runId": "moonfall-final",
+    "captures": [
+      {
+        "name": "844x390-active-play",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "path": "artifacts/qa-final/844x390-active-play.png",
+        "metrics": {
+          "calls": 61,
+          "triangles": 48188,
+          "geometries": 85,
+          "textures": 4,
+          "dpr": 1,
+          "renderMs": 1.199999999254942,
+          "frameMs": 95.45454545454545,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 29,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 2,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          37.55496032172211,
+          33.65622140722601,
+          34.517733381028684
+        ],
+        "entropy": 7.01745070403153,
+        "canvasStdDev": [
+          33.378475508140866,
+          29.32201568513899,
+          30.63125159358662
+        ]
+      },
+      {
+        "name": "844x390-after-flight",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "path": "artifacts/qa-final/844x390-after-flight.png",
+        "metrics": {
+          "calls": 53,
+          "triangles": 56182,
+          "geometries": 85,
+          "textures": 4,
+          "dpr": 1,
+          "renderMs": 1.1000000014901161,
+          "frameMs": 95.07246376811594,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": 0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 2,
+          "projectiles": 5,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          34.06319288782522,
+          30.289235078989808,
+          31.003459674371378
+        ],
+        "entropy": 7.01665106408904,
+        "canvasStdDev": [
+          29.508265218273937,
+          25.79510390235328,
+          26.90226039184576
+        ]
+      },
+      {
+        "name": "640x360-active-play",
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "path": "artifacts/qa-final/640x360-active-play.png",
+        "metrics": {
+          "calls": 79,
+          "triangles": 53338,
+          "geometries": 87,
+          "textures": 4,
+          "dpr": 0.85,
+          "renderMs": 3.800000000745058,
+          "frameMs": 95.27777777777777,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 0,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          36.89630346237691,
+          33.57445926403557,
+          34.19940929688756
+        ],
+        "entropy": 7.29731331740647,
+        "canvasStdDev": [
+          31.305081818933786,
+          27.349373390368058,
+          28.492916306802858
+        ]
+      },
+      {
+        "name": "932x430-active-play",
+        "viewport": {
+          "width": 932,
+          "height": 430
+        },
+        "path": "artifacts/qa-final/932x430-active-play.png",
+        "metrics": {
+          "calls": 79,
+          "triangles": 53338,
+          "geometries": 87,
+          "textures": 4,
+          "dpr": 0.85,
+          "renderMs": 0.8999999985098839,
+          "frameMs": 94.8148148148148,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 0,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          34.902975850009,
+          31.39066456668021,
+          32.254878664060804
+        ],
+        "entropy": 7.011205841544696,
+        "canvasStdDev": [
+          31.651514446945434,
+          27.67903108169812,
+          28.85959088097303
+        ]
+      },
+      {
+        "name": "1440x900-active-play",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "path": "artifacts/qa-final/1440x900-active-play.png",
+        "metrics": {
+          "calls": 79,
+          "triangles": 53338,
+          "geometries": 87,
+          "textures": 4,
+          "dpr": 0.85,
+          "renderMs": 1,
+          "frameMs": 93.79629629629629,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 0,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          33.04590870247651,
+          29.305528856398123,
+          30.267773830837722
+        ],
+        "entropy": 6.849197751883607,
+        "canvasStdDev": [
+          31.83693289004421,
+          27.811264879786116,
+          28.991487538772148
+        ]
+      },
+      {
+        "name": "844x390-siege",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "path": "artifacts/qa-final/844x390-siege.png",
+        "metrics": {
+          "calls": 90,
+          "triangles": 54426,
+          "geometries": 97,
+          "textures": 4,
+          "dpr": 0.7,
+          "renderMs": 1.199999999254942,
+          "frameMs": 92.77777777777776,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 8,
+          "projectiles": 4,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          36.409202960177375,
+          32.36403643692305,
+          33.09556832485492
+        ],
+        "entropy": 7.1106651786383255,
+        "canvasStdDev": [
+          31.601585820987697,
+          27.63785695268002,
+          28.81846516507183
+        ]
+      }
+    ],
+    "checks": {
+      "multitouch": {
+        "aimPoint": null,
+        "moveX": 0.8408532499441589,
+        "moveY": 0.2824436006254188,
+        "aimX": 0,
+        "aimY": 0,
+        "altitude": 0,
+        "fire": true,
+        "missile": false,
+        "boost": true,
+        "brake": false,
+        "countermeasure": false
+      },
+      "twoThumbBoost": {
+        "aimPoint": null,
+        "moveX": 0.8408532499441589,
+        "moveY": 0.2824436006254188,
+        "aimX": 0,
+        "aimY": 0,
+        "altitude": 0,
+        "fire": true,
+        "missile": false,
+        "boost": true,
+        "brake": false,
+        "countermeasure": false
+      },
+      "release": {
+        "aimPoint": null,
+        "moveX": 0,
+        "moveY": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "altitude": 0,
+        "fire": false,
+        "missile": false,
+        "boost": false,
+        "brake": false,
+        "countermeasure": false
+      },
+      "audio": {
+        "state": "running",
+        "voices": 0,
+        "muted": false,
+        "playing": true
+      },
+      "pause": true,
+      "touchMissile": true,
+      "motionSeconds": 2.0305284730002313,
+      "travel": {
+        "start": {
+          "phase": "patrol",
+          "position": {
+            "x": 0,
+            "y": 80,
+            "z": -190
+          },
+          "time": 0.8000000000000008,
+          "kills": 0,
+          "base": [
+            {
+              "id": "reactor",
+              "hp": 260
+            },
+            {
+              "id": "comms",
+              "hp": 180
+            },
+            {
+              "id": "hangar",
+              "hp": 220
+            },
+            {
+              "id": "fuel",
+              "hp": 160
+            }
+          ],
+          "metrics": {
+            "calls": 79,
+            "triangles": 53338,
+            "geometries": 83,
+            "textures": 4,
+            "dpr": 1,
+            "renderMs": 1.1000000014901161,
+            "frameMs": 91.66666666666667,
+            "camera": "tactical",
+            "terrainChunks": 25,
+            "origin": {
+              "x": 0,
+              "z": -0.0
+            },
+            "renderer": "WebGL2",
+            "postPasses": 0,
+            "shadowLights": 1
+          }
+        },
+        "end": {
+          "phase": "intercept",
+          "position": {
+            "x": 667.2170529612692,
+            "y": 80,
+            "z": 101.4241992802678
+          },
+          "time": 7.666666666666645,
+          "kills": 1,
+          "base": [
+            {
+              "id": "reactor",
+              "hp": 260
+            },
+            {
+              "id": "comms",
+              "hp": 180
+            },
+            {
+              "id": "hangar",
+              "hp": 220
+            },
+            {
+              "id": "fuel",
+              "hp": 160
+            }
+          ],
+          "metrics": {
+            "calls": 53,
+            "triangles": 56182,
+            "geometries": 85,
+            "textures": 4,
+            "dpr": 1,
+            "renderMs": 1.400000000372529,
+            "frameMs": 95.11494252873563,
+            "camera": "tactical",
+            "terrainChunks": 25,
+            "origin": {
+              "x": 0,
+              "z": 0
+            },
+            "renderer": "WebGL2",
+            "postPasses": 0,
+            "shadowLights": 1
+          }
+        }
+      },
+      "mute": true,
+      "layout-640x360": [],
+      "layout-932x430": [],
+      "layout-1440x900": [],
+      "retry": true,
+      "upgrade": {
+        "creditsBefore": 150,
+        "creditsAfter": 50,
+        "level": 1
+      },
+      "portrait": true
+    },
+    "errors": [],
+    "resources": []
+  },
+  "qa-context": {
+    "runId": "moonfall-2026-10-17-pass2",
+    "captures": [
+      {
+        "name": "context-restored",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "path": "artifacts/qa-context/context-restored.png",
+        "metrics": {
+          "calls": 79,
+          "triangles": 53338,
+          "geometries": 86,
+          "textures": 4,
+          "dpr": 1,
+          "renderMs": 2.5,
+          "frameMs": 70.83166666666666,
+          "camera": "tactical",
+          "terrainChunks": 25,
+          "origin": {
+            "x": 0,
+            "z": -0.0
+          },
+          "renderer": "WebGL2",
+          "postPasses": 0,
+          "shadowLights": 1,
+          "entities": 3,
+          "projectiles": 0,
+          "physics": {
+            "engine": "custom swept-sphere",
+            "fixedHz": 60
+          },
+          "audio": {
+            "state": "running",
+            "voices": 0,
+            "muted": false,
+            "playing": true
+          }
+        },
+        "pixelChannelStdDev": [
+          35.95548183106154,
+          32.51330500718835,
+          33.34631212961205
+        ],
+        "entropy": 7.0732228537167225,
+        "canvasStdDev": [
+          31.650339700458346,
+          27.67855112281001,
+          28.860725512802446
+        ]
+      }
+    ],
+    "checks": {
+      "contextRestore": true,
+      "offlineAfterLoad": true,
+      "singleRenderer": true
+    },
+    "errors": [],
+    "resources": []
+  }
+}

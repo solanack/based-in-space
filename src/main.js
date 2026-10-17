@@ -7,8 +7,8 @@ import {GameAudio} from './audio/manager.js';
 const canvas=document.getElementById('game'),query=new URLSearchParams(location.search),qa=query.has('qa');
 let game=createGame(loadSave()),screen='start',renderer,controls,hud,last=performance.now(),accumulator=0,previousPhase=game.phase,input={},frozen=false;
 const audio=new GameAudio();
-function show(next){screen=next;accumulator=0;last=performance.now();controls.release();hud.show(next);audio.setPlaying(next==='playing');}
-async function start(){await audio.unlock();game=createGame(loadSave());previousPhase=game.phase;show('playing');}
+function show(next){screen=next;accumulator=0;last=performance.now();controls.release();hud.update(game,renderer.metrics());hud.show(next);audio.setPlaying(next==='playing');}
+async function start(){await audio.unlock();frozen=false;game=createGame(loadSave());previousPhase=game.phase;show('playing');}
 async function resume(){await audio.unlock();show('playing');}
 function pause(){if(screen==='playing')show('paused');}
 function upgrade(kind){const profile=game.save;if(!['hull','shield','engines'].includes(kind))return;const level=profile.upgrades[kind],cost=100*(level+1);if(level>=5||profile.credits<cost)return;profile.credits-=cost;profile.upgrades[kind]++;saveGame(profile);hud.update(game,renderer.metrics());hud.show('won');}
@@ -22,7 +22,7 @@ try{
  window.addEventListener('resize',()=>{if(innerHeight>innerWidth)pause();});
  // A single canvas owns the context; WebGLRenderer restores its resources in place.
  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();pause();document.body.dataset.context='lost';});
- canvas.addEventListener('webglcontextrestored',()=>{document.body.dataset.context='ready';last=performance.now();});
+ canvas.addEventListener('webglcontextrestored',()=>{renderer.restoreEnvironment();document.body.dataset.context='ready';last=performance.now();});
  const markers=document.createElement('div');markers.id='world-markers';markers.setAttribute('aria-hidden','true');document.getElementById('app').append(markers);
  const markerPool=[];for(let n=0;n<36;n++){const m=document.createElement('div');m.className='contact-marker';markers.append(m);markerPool.push(m);}
  function updateMarkers(){markers.hidden=screen!=='playing';let idx=0;const p=game.player.position;
@@ -38,7 +38,7 @@ try{
      while(accumulator>=1/60){step(game,input,1/60);accumulator-=1/60;}
      if(game.phase!==previousPhase){previousPhase=game.phase;if(game.phase==='failed'||game.phase==='debrief'){saveGame(game);show(game.phase==='debrief'?'won':'lost');}}
    }
-   renderer.frame(game,dt,screen==='playing'&&!frozen?accumulator*60:1,input);audio.update(game,input);
+   renderer.frame(game,dt,screen==='playing'&&!frozen?accumulator*60:1,input,raw);audio.update(game,input);
    hudElapsed+=dt;if(hudElapsed>=1/20){hudElapsed=0;hud.update(game,renderer.metrics());updateMarkers();}
    requestAnimationFrame(frame);
  }
