@@ -45,3 +45,11 @@ One representative procedural region and three hostile roles; no capital boss/la
 ## Workflow
 
 Skills used: cloud-environment runtime/networking; owner Three.js game-director with gameplay, graphics, UI, debug and QA specialists and scoped references; Vercel deployment guidance. Two focused workers produced simulation/tests and controls/UI. Accepted owner mesh and original procedural geometry/audio used; no generation spend. Draft PR1 preserves review; deployment is authorized by the user's later “Finish and deploy”. Main and donor are not modified by deployment.
+
+## Production deployment
+
+[Play Moonfall](https://based-in-space-preview.vercel.app/) — production READY; deployment dpl_B1FGnDEcrjbnfChf6RpzvsYMJwX8, application commit c33a752735cebd36ae20dc928d51d76508288803, static framework. Vercel build duration1.966seconds. Existing project/team/domain preserved; main remains unmerged. [Deployment record](deployment.json).
+
+Public URL verified in fresh Chromium: new game deploys, movement and firing change live state, audio runs, nonblank canvas, zero console/page/resource errors. [Production screenshot](evidence/live-production.jpg) and [raw smoke report](evidence/production-smoke.json). Vercel build logs show successful static output and deployment, with no build errors. There are no application server functions in this build; client smoke verification is not continuous client-error monitoring. Drains were not inspected.
+
+GPU identification confirms ANGLE/Vulkan SwiftShader software rendering. Fresh-page raw average rAF interval was~350ms including startup; CPU submission~1.5ms,80draw calls and53,538visible triangles. This is a slow cloud software-rendered session and does NOT satisfy or establish the30/60FPS target. Physical-GPU Android/thermal performance remains a release gate; no mobile-ready or premium claim.
