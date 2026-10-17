@@ -1,67 +1,55 @@
-import {FlightWorld} from './core/world.js';
-import {FixedLoop} from './core/loop.js';
-import {loadSettings,saveSettings,loadProgress,recordCompletion} from './core/save.js';
-import {LEVELS} from './levels/index.js';
-import {TUNING,setTuning} from './config/tuning.js';
-import {FlightRenderer} from './render/renderer.js';
-import {UI} from './ui/ui.js';
-import {Input} from './input/input.js';
-import {GameAudio} from './audio/audio.js';
-import {createHitStop,punctuate,stepHitStop,resetHitStop} from './combat/hitstop.js';
-
-const query=new URLSearchParams(location.search),debug=query.has('debug'),qa=query.has('qa');
-let settings=loadSettings(),progress=loadProgress(),ready=false,renderer,input,loop,ui;
-let screen='menu',settingsReturn='menu',intent={};
-const hitStop=createHitStop();
-const audio=new GameAudio(settings);
-const world=new FlightWorld({onEvent:event=>{
-  renderer?.event(event,world);
-  punctuate(hitStop,event);
-  if(event.type==='complete'){
-    if(!world.practice){progress=recordCompletion(progress,world.level.id,world.result);ui.setProgress(progress);}
-    show('complete');
-  }else if(event.type==='death')show('dead');
-  audio.event(event,world);
-}});
-function show(next){screen=next;input?.clear();if(input)input.enabled=next==='playing';loop?.setPaused(next!=='playing');audio.setPlaying(next==='playing');ui?.update(world,{progress});ui?.setScreen(next);renderer?.setMode(next);}
-function start(id=1,options={}){if(!ready)return;if(!debug&&!qa&&!options.practice&&id>progress.unlocked)return;audio.unlock();intent={};resetHitStop(hitStop);world.start(id,options);renderer.setLevel(world.level);show('playing');}
-function pause(){if(screen==='playing')show('paused');else if(screen==='paused')resume();}
-function resume(){if(world.state==='playing'){audio.unlock();show('playing');}}
-function setting(key,value){settings={...settings,[key]:value};saveSettings(settings);input?.setSettings(settings);audio.setSettings(settings);renderer?.applySettings(settings);ui.setSettings(settings);}
-function camera(){setting('camera',settings.camera==='chase'?'cockpit':'chase');ui.notify(settings.camera==='chase'?'CHASE CAMERA':'COCKPIT CAMERA');}
-function mute(){setting('muted',!settings.muted);audio.unlock();}
-const actions={start,practice:dummies=>start(1,{practice:true,dummies}),pause,resume,camera,mute,
-  menu:()=>show(screen==='settings'?settingsReturn:'menu'),
-  hangar:()=>show('hangar'),levelSelect:()=>show('select'),
-  settings:()=>{settingsReturn=screen==='paused'?'paused':'menu';show('settings');},
-  retry:checkpoint=>{audio.unlock();intent={};resetHitStop(hitStop);world.retry({checkpoint});renderer.setLevel(world.level);show('playing');},
-  continue:()=>world.level.id<LEVELS.length?start(world.level.id+1):show('select'),
-  setSetting:setting,
-  remap:(action,code)=>{const keys={...settings.keys},other=Object.keys(keys).find(k=>k!==action&&keys[k]===code);if(other)keys[other]=keys[action];keys[action]=code;setting('keys',keys);},
-  gyro:async()=>{const ok=await input.enableGyro();if(ok){settings={...settings,gyro:true};saveSettings(settings);}ui.notify(ok?'TILT ENABLED · Hold the phone comfortably to center':'Tilt unavailable. Touch steering remains ready.');},
-  tune:(key,value)=>ui.notify(setTuning(key,value)?`${key}: ${TUNING[key]}`:'Enter a value inside the supported range.')
-};
-ui=new UI(actions,{levels:LEVELS,progress,settings,debug});ui.setSettings(settings);
-input=new Input(document.getElementById('game'),settings,{pause,camera,mute,screenAim:(x,y)=>renderer?.aimAt(x,y)});
-window.addEventListener('blur',()=>{if(screen==='playing')show('paused');});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&screen==='playing')show('paused');});
-window.addEventListener('error',e=>{if(!ready)ui.setLoading('FLIGHT SYSTEM ERROR: '+e.message);});
-async function boot(){try{
-  renderer=new FlightRenderer(document.getElementById('game'),settings);
-  await renderer.load((n,total)=>ui.setLoading(`ASSEMBLING FLEET / ${n} OF ${total}`));
-  world.start(1,{practice:true});renderer.setLevel(world.level);show('menu');
-  let hudTimer=0;
-  loop=new FixedLoop(dt=>{intent=input.read();if(screen!=='playing')return;world.step(dt*stepHitStop(hitStop,dt),intent);},(dt,alpha,raw)=>{
-    if(screen!=='playing')input.gamepad();
-    renderer.aim={...intent,aimX:world.player?.aimX??intent.aimX??0,aimY:world.player?.aimY??intent.aimY??0};
-    renderer.frame(world,dt,alpha,screen,screen!=='playing',raw);
-    audio.update(world,intent);hudTimer+=dt;
-    if(hudTimer>=1/30){hudTimer=0;const ax=world.player?.aimX??intent.aimX??0,ay=world.player?.aimY??intent.aimY??0;const aim=renderer.project(ax*TUNING.windowX,ay*TUNING.windowY,world.distance+160);ui.update(world,{camera:settings.camera,progress,reticle:aim,metrics:debug?renderer.metrics():null});}
-  });
-  loop.start();ready=true;ui.setReady();
-  globalThis.starflight={get ready(){return ready;},diagnostics:()=>({screen,state:world.state,level:world.level.id,time:world.time,distance:world.distance,metrics:renderer.metrics()})};
-  if(qa||debug)Object.assign(globalThis.starflight,{world,renderer,input,ui,actions,loop,audio,settings:()=>settings,progress:()=>progress,adaptive:()=>renderer.adaptive.state(),forceFrameMs:ms=>{renderer._forceFrameMs=ms==null?null:Number(ms);},pumpAdaptive:(ms,n)=>{const st=renderer.adaptive.sampleMany(Number(ms),Number(n)||1);renderer.applyAdaptiveState(st);return st;},
-    step:(frames,control={})=>{for(let n=0;n<frames&&world.state==='playing';n++)world.step(1/60,typeof control==='function'?control(world):control);renderer.frame(world,0,1,screen,true);ui.update(world,{progress});},
-    render:()=>renderer.frame(world,0,1,screen,true)});
-}catch(error){console.error(error);ui.setLoading('FLIGHT SYSTEM ERROR: '+error.message);}}
-boot();
+import {createGame,step,terrainHeight} from './game/simulation.js';
+import {loadSave,saveGame} from './persistence/save.js';
+import {createControls} from './input/controls.js';
+import {createHUD} from './ui/hud.js';
+import {MoonRenderer} from './render/scene.js';
+import {GameAudio} from './audio/manager.js';
+const canvas=document.getElementById('game'),query=new URLSearchParams(location.search),qa=query.has('qa');
+let game=createGame(loadSave()),screen='start',renderer,controls,hud,last=performance.now(),accumulator=0,previousPhase=game.phase,input={},frozen=false;
+const audio=new GameAudio();
+function show(next){screen=next;accumulator=0;last=performance.now();controls.release();hud.show(next);audio.setPlaying(next==='playing');}
+async function start(){await audio.unlock();game=createGame(loadSave());previousPhase=game.phase;show('playing');}
+async function resume(){await audio.unlock();show('playing');}
+function pause(){if(screen==='playing')show('paused');}
+function upgrade(kind){const profile=game.save;if(!['hull','shield','engines'].includes(kind))return;const level=profile.upgrades[kind],cost=100*(level+1);if(level>=5||profile.credits<cost)return;profile.credits-=cost;profile.upgrades[kind]++;saveGame(profile);hud.update(game,renderer.metrics());hud.show('won');}
+function setting(){audio.settings({...controls.settings,muted:controls.settings.mute,dynamicRange:controls.settings.dynamicRange==='full'?'wide':'compact'});renderer.settings=controls.settings;renderer.resize();}
+try{
+ controls=createControls(document.body);
+ renderer=new MoonRenderer(canvas,game,controls.settings);
+ hud=createHUD({onStart:start,onPause:pause,onResume:resume,onRestart:start,onUpgrade:upgrade,onCamera:()=>renderer.setCamera()});
+ setting();window.addEventListener('moonfall:settings',setting);
+ window.addEventListener('blur',pause);document.addEventListener('visibilitychange',()=>{if(document.hidden){pause();saveGame(game);}});
+ window.addEventListener('resize',()=>{if(innerHeight>innerWidth)pause();});
+ // A single canvas owns the context; WebGLRenderer restores its resources in place.
+ canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();pause();document.body.dataset.context='lost';});
+ canvas.addEventListener('webglcontextrestored',()=>{document.body.dataset.context='ready';last=performance.now();});
+ const markers=document.createElement('div');markers.id='world-markers';markers.setAttribute('aria-hidden','true');document.getElementById('app').append(markers);
+ const markerPool=[];for(let n=0;n<36;n++){const m=document.createElement('div');m.className='contact-marker';markers.append(m);markerPool.push(m);}
+ function updateMarkers(){markers.hidden=screen!=='playing';let idx=0;const p=game.player.position;
+   for(const e of [...game.enemies,...game.base.filter(b=>b.hp>0)]){if(idx>=markerPool.length)break;const dist=Math.hypot(e.position.x-p.x,e.position.y-p.y,e.position.z-p.z),pt=renderer.project(e.position),base=!!e.name,m=markerPool[idx++];m.hidden=false;m.className='contact-marker'+(base?' installation':'')+(game.lock.targetId===e.id?' selected':'');
+     const x=Math.max(24,Math.min(innerWidth-24,pt.x)),y=Math.max(95,Math.min(innerHeight-105,pt.y));m.style.left=x+'px';m.style.top=y+'px';m.classList.toggle('offscreen',!pt.visible);m.textContent=(pt.visible?'': '◇ ')+(base?e.name:e.role.toUpperCase())+' '+Math.round(dist)+'m';
+   }for(;idx<markerPool.length;idx++)markerPool[idx].hidden=true;
+   const target=game.enemies.find(e=>e.id===game.lock.targetId)||game.enemies.filter(e=>e.hp>0).sort((a,b)=>Math.hypot(a.position.x-p.x,a.position.z-p.z)-Math.hypot(b.position.x-p.x,b.position.z-p.z))[0];
+   const ret=document.getElementById('target-reticle');if(target){const travel=Math.hypot(target.position.x-p.x,target.position.z-p.z)/560,lead={x:target.position.x+target.velocity.x*travel,y:target.position.y+target.velocity.y*travel,z:target.position.z+target.velocity.z*travel},point=renderer.project(lead);const bounds=document.getElementById('hud').getBoundingClientRect();ret.style.left=((point.visible?point.x:innerWidth/2)-bounds.left)+'px';ret.style.top=((point.visible?point.y:innerHeight/2)-bounds.top)+'px';}
+ }
+ let hudElapsed=0;
+ function frame(now){const raw=Math.max(0,(now-last)/1000);last=now;const dt=Math.min(raw,.1);
+   if(screen==='playing'&&!frozen){accumulator=Math.min(accumulator+dt,.1);input=controls.sample();if(input.aimPoint){const aim=renderer.aimAt(input.aimPoint.x,input.aimPoint.y,game.player);if(aim)Object.assign(input,aim);}
+     while(accumulator>=1/60){step(game,input,1/60);accumulator-=1/60;}
+     if(game.phase!==previousPhase){previousPhase=game.phase;if(game.phase==='failed'||game.phase==='debrief'){saveGame(game);show(game.phase==='debrief'?'won':'lost');}}
+   }
+   renderer.frame(game,dt,screen==='playing'&&!frozen?accumulator*60:1,input);audio.update(game,input);
+   hudElapsed+=dt;if(hudElapsed>=1/20){hudElapsed=0;hud.update(game,renderer.metrics());updateMarkers();}
+   requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+ globalThis.__THREE_GAME_DIAGNOSTICS__=()=>({...renderer.metrics(),entities:game.enemies.length,projectiles:game.projectiles.length,physics:{engine:'custom swept-sphere',fixedHz:60},audio:audio.diagnostics()});
+ if(qa){globalThis.moonfall={get game(){return game},get input(){return input},get screen(){return screen},renderer,controls,audio,start,pause,resume,upgrade,
+   step:(frames,control={})=>{for(let i=0;i<frames;i++)step(game,typeof control==='function'?control(game):control,1/60);hud.update(game,renderer.metrics());renderer.frame(game,1/60,1,control);},
+   setState:async name=>{frozen=true;game=createGame(loadSave());if(name==='active-play')game.time=5;else if(name==='siege'){game.time=45;step(game,{},1/60);step(game,{},1/60);}else if(name==='failed'){game.player.hp=0;step(game,{},1/60);show('lost');}else if(name==='debrief'){game.phase='debrief';game.score=1500;saveGame(game);show('won');}else throw new Error('Unsupported QA state '+name);if(name==='active-play'||name==='siege')show('playing');hud.update(game,renderer.metrics());renderer.frame(game,1/60,1,{});return {state:name};},
+   setPausedForScreenshot:paused=>{frozen=paused;},
+   diagnostics:()=>globalThis.__THREE_GAME_DIAGNOSTICS__(),
+   inspectAsset:view=>{frozen=true;show('playing');const p=game.player.position,camera=renderer.camera;const offsets={top:[0,85,0.01],front:[0,12,80],side:[80,12,0],threequarter:[45,35,55]};const a=offsets[view];if(!a)throw Error('Unknown asset view');renderer.frame(game,1/60,1,{});camera.position.set(p.x-renderer.origin.x+a[0],p.y+a[1],p.z-renderer.origin.z+a[2]);camera.lookAt(p.x-renderer.origin.x,p.y,p.z-renderer.origin.z);renderer.renderer.render(renderer.scene,camera);},
+   snapshot:()=>({phase:game.phase,position:game.player.position,time:game.time,kills:game.kills,base:game.base.map(b=>({id:b.id,hp:b.hp})),metrics:renderer.metrics()})};
+ }
+}catch(error){console.error(error);document.getElementById('app').textContent='Flight systems could not start. '+error.message;}

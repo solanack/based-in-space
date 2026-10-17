@@ -1,0 +1,9 @@
+# Moonfall slice contract
+
+Fly a recognizable RAZOR absurdly fast across a lunar outpost, reverse a pursuit, then choose between chasing a fighter and saving a threatened installation. The main verb is steer-and-fire; altitude, boost, drift brake, missiles and countermeasures create short tactical decisions. Every5–30seconds acquire a target, lead shots, evade, and reacquire. Across two minutes the patrol becomes a three-wave base siege. Intercept bombers before infrastructure is lost; surviving a timer alone does not win. Hull/base failure enables immediate retry. Securing the outpost earns persistent credits for hull/shield/engine upgrades and a fresh sortie.
+
+Spatial plan: departure south of outpost; scout contacts to north; reactor/comms/hangar/fuel landmarks; canyon west and crater northeast. Free horizontal travel, actual altitude band, bounded local actors and streamed terrain instead of a scrolling tunnel. Elevated north-up tactical camera communicates all bearings; optional heading-following boost chase increases speed sensation. Terrain and installations provide physical cover. Rear threats appear on radar/edge warnings and emit warning tones before firing.
+
+Visual contract: preserve glossy black/red/white hard-surface RAZOR; gray-violet regolith, direct cream sunlight, crisp metallic installations, controlled red threat signals and icy engine exhaust. No affiliation claim or protected logos. Original procedural mechanical hostile designs. No paid assets/generation.
+
+Initial acceptance: launch and fly with real keyboard/touch, simultaneous steering/fire/boost, missile hold/lock/release, altitude crossings, chase reversal, independently damaged base, fail/retry, success/debrief/save/upgrade. HUD settings and layout survive resize. Physical10minute touch evaluation requires owner-paired device and is explicitly unverified here.

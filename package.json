@@ -1,0 +1,14 @@
+{
+  "name": "based-in-space-moonfall",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 5188 --bind 0.0.0.0",
+    "test": "node --test --test-isolation=none tests/*.test.js",
+    "check": "node --experimental-vm-modules scripts/check.mjs",
+    "build": "node --experimental-vm-modules scripts/build.mjs",
+    "preview": "python3 -m http.server 5188 --bind 0.0.0.0 --directory dist",
+    "qa": "python3 tests/browser_qa.py"
+  }
+}
